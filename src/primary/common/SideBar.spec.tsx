@@ -16,13 +16,11 @@ vi.mock('react-i18next', () => ({
 }))
 
 const renderComponent = () => {
-  const wrapper = render(
+  return render(
     <AppContext.Provider value={appContext}>
       <SideBar/>
     </AppContext.Provider>
-  )
-
-  return wrapper;
+  );
 }
 
 describe('Sidebar component', () => {

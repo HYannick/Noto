@@ -1,5 +1,6 @@
 import {Note, NoteToCreate} from '../../domain/Note.ts';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
+
 export interface NoteResourceRepository {
   getAllNotes: () => Promise<Note[]>;
   createNote: (noteToCreate: NoteToCreate) => Promise<Note>;
@@ -44,8 +45,7 @@ export const NoteResource = (storage: LocalForage): NoteResourceRepository => {
 
   const getNoteById = async (noteId: string): Promise<Note> => {
     const notes = await getAllNotes();
-    const note = notes.find(note => note.id === noteId)!;
-    return note;
+    return notes.find(note => note.id === noteId)!;
   }
 
   const deleteNoteById = async (noteId: string): Promise<Note[]> => {

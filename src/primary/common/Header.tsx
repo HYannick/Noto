@@ -34,7 +34,7 @@ export const HeaderContainer = styled.div`
   .greeting-text {
     font-size: 1.2rem;
     color: var(--color-grey);
-    line-height: 0rem;
+    line-height: 0;
   }
 
   .greeting-username {
@@ -55,7 +55,7 @@ export default function Header() {
   return (
     <HeaderContainer>
       <div className="greeting-container">
-        <div className="avatar"><img src={sampleAvatar}/></div>
+        <div className="avatar"><img src={sampleAvatar} alt="avatar"/></div>
         <div className="greeting-text">
           <p>{t('hello')}</p>
           <p className="greeting-username">Ninska</p>

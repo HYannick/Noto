@@ -16,7 +16,6 @@ export const SideBarContainer = styled.div`
   right: 0;
   bottom: 0;
   top: 0;
-  bottom: 0;
   transform: translateX(${(props: {isOpen: boolean}) => props.isOpen ? '0' : '80vw'});
   background: var(--color-light);
   width: 80vw;
@@ -116,7 +115,7 @@ export default function SideBar() {
         <div className="app-options">
           <AppUserInfos>
             <div className="user-avatar" data-testid="user-avatar">
-              <img src={sampleAvatar} />
+              <img src={sampleAvatar} alt="avatar" />
             </div>
             <div className="user-infos">
               <div className="user-input" data-testid="user-input">

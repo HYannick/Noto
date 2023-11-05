@@ -1,5 +1,5 @@
-import {vi, beforeEach, it, describe, expect} from 'vitest';
-import {render, fireEvent, cleanup} from '@testing-library/react';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {cleanup, fireEvent, render} from '@testing-library/react';
 import {act} from 'react-dom/test-utils';
 import {AppContext, NoteContext} from '../../primary/common/contexts';
 import CreateEditNote from '../CreateEditNote.tsx';
@@ -27,15 +27,13 @@ vi.mock('../../domain/hooks/UseInject.ts', () => ({
   useInject: vi.fn((() => noteService))
 }))
 const renderComponent = () => {
-  const wrapper = render(
+  return render(
     <AppContext.Provider value={appContext}>
       <NoteContext.Provider value={noteContext}>
         <CreateEditNote/>
       </NoteContext.Provider>
     </AppContext.Provider>
-  )
-
-  return wrapper;
+  );
 }
 
 const getTags = (getByTestId: (id: string) => HTMLElement) => ({
