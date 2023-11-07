@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 import IconButton from '../primary/common/IconButton.tsx';
 import DefaultButton from '../primary/common/DefaultButton.tsx';
-import {ChangeEvent, FormEvent, useContext, useEffect, useState} from 'react';
-import AppContext, {AppContextValues} from '../primary/common/contexts/AppContext.ts';
+import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import InputField from '../primary/common/InputField.tsx';
 import {useTranslation} from 'react-i18next';
 import {Note, NoteToCreate} from '../domain/Note.ts';
 import {useInject} from '../domain/hooks/UseInject.ts';
 import {INoteService} from '../primary/note/NoteService.tsx';
-import NoteContext, {NoteContextValues} from '../primary/common/contexts/NoteContext.ts';
+import {useAppStore} from '../primary/stores/app.store.ts';
+import {useNoteStore} from '../primary/stores/note.store.ts';
 
 export const CreateEditNoteForm = styled.form`
   transform: translateY(${(props: { isOpen: boolean }) => props.isOpen ? '0' : '100vh'});
@@ -64,9 +64,11 @@ export const CreateEditNoteForm = styled.form`
     font-family: var(--main-font);
   }
 `
-export default function CreateEditNote() {
-  const {createEditNoteOpen, setCreateEditNoteState} = useContext(AppContext) as AppContextValues;
-  const {currentNote, setCurrentNote} = useContext(NoteContext) as NoteContextValues;
+export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => void }) {
+  const currentNote = useNoteStore(state => state.currentNote)
+  const setCurrentNote = useNoteStore(state => state.setCurrentNote)
+  const closeNoteEdit = useAppStore(state => state.closeNoteEdit)
+  const createEditNoteOpen = useAppStore(state => state.createEditNoteOpen)
   const {t} = useTranslation();
   const noteService = useInject('noteService') as INoteService;
   const currentDate = new Date();
@@ -86,18 +88,19 @@ export default function CreateEditNote() {
     let updatedNote: Note;
 
     if (currentNote) {
-      updatedNote = await noteService.updateNote(currentNote.id, { ...currentNote, ...noteToCreate });
+      updatedNote = await noteService.updateNote(currentNote.id, {...currentNote, ...noteToCreate});
     } else {
       updatedNote = await noteService.createNote(noteToCreate);
     }
 
     setCurrentNote(updatedNote);
+    onNoteUpdate();
   };
 
   const goBack = async (e: any) => {
     e.preventDefault();
     await saveNote(e);
-    setCreateEditNoteState(false)
+    closeNoteEdit();
     resetNote()
   }
 
@@ -109,7 +112,7 @@ export default function CreateEditNote() {
   }
   const resetNote = () => {
     setNoteToCreate(initialValues)
-    setCurrentNote(null)
+    setCurrentNote(null);
   }
 
   useEffect(() => {
@@ -134,7 +137,9 @@ export default function CreateEditNote() {
       </div>
 
       <div className="create-note-body">
-        <textarea data-testid="text-input" className="create-note-textarea" value={noteToCreate.text} onInput={(e: ChangeEvent<HTMLTextAreaElement>) => updateNote('text', e.target.value)}></textarea>
+        {/*<Editor />*/}
+        <textarea data-testid="text-input" className="create-note-textarea" value={noteToCreate.text}
+                  onInput={(e: ChangeEvent<HTMLTextAreaElement>) => updateNote('text', e.target.value)}></textarea>
       </div>
       <div className="create-note-footer">
         <DefaultButton dataTestId="save-button" type="submit" icon="save" label="Save"/>

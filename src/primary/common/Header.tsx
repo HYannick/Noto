@@ -2,9 +2,8 @@ import sampleAvatar from '../../assets/sample-avatar.png'
 import styled from '@emotion/styled';
 import {useTranslation} from 'react-i18next';
 import IconButton from './IconButton.tsx';
-import {useContext} from 'react';
 import SideBar from './SideBar.tsx';
-import appContext, {AppContextValues} from './contexts/AppContext.ts';
+import {useAppStore} from '../stores/app.store.ts';
 
 export const HeaderContainer = styled.div`
   display: flex;
@@ -46,11 +45,7 @@ export const HeaderContainer = styled.div`
 
 export default function Header() {
   const {t} = useTranslation();
-  const {setSidebarState} = useContext(appContext) as AppContextValues;
-
-  function openSidebar() {
-    setSidebarState(true);
-  }
+  const openSidebar = useAppStore((state) => state.openSidebar)
 
   return (
     <HeaderContainer>

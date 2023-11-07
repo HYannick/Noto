@@ -1,11 +1,10 @@
 import './App.css'
 import {initDB} from './storage.ts';
 import HomeView from './views/HomeView.tsx';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {useTheme} from './domain/hooks/UseTheme.ts';
 import {IContainer} from './domain/IContainer.ts';
 import {NoteService} from './primary/note/NoteService.tsx';
-import AppContext from './primary/common/contexts/AppContext.ts';
 import {ContainerProvider} from './primary/common/ContainerProvider.tsx';
 import {NoteResource} from './secondary/note/NoteResource.ts';
 
@@ -25,17 +24,13 @@ const container: IContainer = {
 }
 
 function App() {
-  const [sidebarOpen, setSidebarState] = useState(false)
-  const [createEditNoteOpen, setCreateEditNoteState] = useState(false)
   const {setTheme} = useTheme();
   useEffect(() => {
     setTheme();
   }, [])
   return (
     <ContainerProvider container={container}>
-      <AppContext.Provider value={{sidebarOpen, createEditNoteOpen, setCreateEditNoteState, setSidebarState}}>
-        <HomeView/>
-      </AppContext.Provider>
+      <HomeView/>
     </ContainerProvider>
   )
 }

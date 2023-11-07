@@ -1,8 +1,6 @@
 import IconButton from './IconButton.tsx';
 import {changeLanguage} from 'i18next';
 import styled from '@emotion/styled';
-import {useContext} from 'react';
-import AppContext, {AppContextValues} from './contexts/AppContext.ts';
 import sampleAvatar from '../../assets/sample-avatar.png'
 import InputField from './InputField.tsx';
 import {useTranslation} from 'react-i18next';
@@ -10,13 +8,16 @@ import DefaultButton from './DefaultButton.tsx';
 import {useTheme} from '../../domain/hooks/UseTheme.ts';
 import {IconName} from '../../assets/svg/icons';
 import * as localforage from 'localforage';
+import {useAppStore} from '../stores/app.store.ts';
+import {useNoteStore} from '../stores/note.store.ts';
+
 export const SideBarContainer = styled.div`
   position: fixed;
   z-index: 10;
   right: 0;
   bottom: 0;
   top: 0;
-  transform: translateX(${(props: {isOpen: boolean}) => props.isOpen ? '0' : '80vw'});
+  transform: translateX(${(props: { isOpen: boolean }) => props.isOpen ? '0' : '80vw'});
   background: var(--color-light);
   width: 80vw;
   display: flex;
@@ -24,15 +25,18 @@ export const SideBarContainer = styled.div`
   justify-content: flex-end;
   padding: 1.5rem;
   transition: transform .3s cubic-bezier(0, 0.55, 0.45, 1) .15s;
+
   .app-settings {
     display: flex;
     justify-content: space-between;
   }
+
   .app-languages {
     display: flex;
     gap: 1.5rem;
     justify-content: space-between;
   }
+
   .sidebar-header {
     height: 5rem;
     display: flex;
@@ -40,14 +44,16 @@ export const SideBarContainer = styled.div`
     justify-content: space-between;
     font-size: 2rem;
   }
-  
+
   .sidebar-title {
     font-size: 4rem;
     font-weight: bolder;
+
     span {
       color: var(--color-primary);
     }
   }
+
   .sidebar-menu {
     flex: 1;
   }
@@ -57,18 +63,21 @@ export const AppUserInfos = styled.div`
   display: flex;
   gap: 1.5rem;
   margin-bottom: 2.1rem;
+
   .user-avatar {
     width: 10rem;
     height: 10rem;
     border-radius: 0.5rem;
     border: 0.1rem solid var(--color-dark);
     overflow: hidden;
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
   }
+
   .user-infos {
     display: flex;
     flex-direction: column;
@@ -84,22 +93,24 @@ export const SidebarOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  opacity: ${(props: {isOpen: boolean}) => props.isOpen ? '0.8' : '0'};
-  visibility: ${(props: {isOpen: boolean}) => props.isOpen ? 'visible' : 'hidden'};
+  opacity: ${(props: { isOpen: boolean }) => props.isOpen ? '0.8' : '0'};
+  visibility: ${(props: { isOpen: boolean }) => props.isOpen ? 'visible' : 'hidden'};
   transition: opacity 0.3s, visibility 0.3s;
 `
 
 export default function SideBar() {
-  const {sidebarOpen, setSidebarState} = useContext(AppContext) as AppContextValues;
+  const closeSidebar = useAppStore((state) => state.closeSidebar)
+  const sidebarOpen = useAppStore((state) => state.sidebarOpen)
+  const setNotes = useNoteStore((state) => state.setNotes)
+
   const {t} = useTranslation();
   const {switchTheme, themeIcon} = useTheme();
-  function closeSidebar() {
-    setSidebarState(false);
-  }
 
   function clearData() {
     localforage.setItem('notes', [])
+    setNotes([])
   }
+
   return (
     <>
       <SideBarContainer isOpen={sidebarOpen}>
@@ -115,13 +126,13 @@ export default function SideBar() {
         <div className="app-options">
           <AppUserInfos>
             <div className="user-avatar" data-testid="user-avatar">
-              <img src={sampleAvatar} alt="avatar" />
+              <img src={sampleAvatar} alt="avatar"/>
             </div>
             <div className="user-infos">
               <div className="user-input" data-testid="user-input">
-                <InputField type="text" placeholder={t('options.userInfos.placeholder')} />
+                <InputField type="text" placeholder={t('options.userInfos.placeholder')}/>
               </div>
-              <DefaultButton dataTestId="user-save-button" label={t('buttons.save')} />
+              <DefaultButton dataTestId="user-save-button" label={t('buttons.save')}/>
             </div>
           </AppUserInfos>
           <div className="app-settings">
@@ -137,7 +148,7 @@ export default function SideBar() {
 
         </div>
       </SideBarContainer>
-      <SidebarOverlay isOpen={sidebarOpen} onClick={closeSidebar} />
+      <SidebarOverlay isOpen={sidebarOpen} onClick={closeSidebar}/>
     </>
   )
 }

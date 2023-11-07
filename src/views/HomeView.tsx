@@ -1,12 +1,16 @@
-import {useContext} from 'react';
+import {useEffect, useState} from 'react';
 import Header from '../primary/common/Header.tsx';
 import Search from '../primary/common/Search.tsx';
 import NoteList from '../primary/note/NoteList.tsx';
 import CreateEditNote from './CreateEditNote.tsx';
-import AppContext, {AppContextValues} from '../primary/common/contexts/AppContext.ts';
 import IconButton from '../primary/common/IconButton.tsx';
 import styled from '@emotion/styled';
-import {NoteProvider} from '../primary/common/providers/NoteProvider.tsx';
+import {Note} from '../domain/Note.ts';
+import {useInject} from '../domain/hooks/UseInject.ts';
+import {INoteService} from '../primary/note/NoteService.tsx';
+import {useAppStore} from '../primary/stores/app.store.ts';
+import {useNoteStore} from '../primary/stores/note.store.ts';
+import {useSearchStore} from '../primary/stores/search.store.ts';
 
 export const IconAddButton = styled.div`
   position: fixed;
@@ -17,18 +21,53 @@ export const IconAddButton = styled.div`
 
 
 export default function HomeView() {
-  const {setCreateEditNoteState} = useContext(AppContext) as AppContextValues;
+  const searchQuery = useSearchStore((state) => state.searchQuery);
+  const setNotes = useNoteStore(state => state.setNotes)
+  const notes = useNoteStore(state => state.noteList)
+  const openNoteEdit = useAppStore(state => state.openNoteEdit)
+  const noteService = useInject('noteService') as INoteService
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
+  const onNoteUpdate = () => {
+    fetchNotes();
+  }
+
+  const fetchNotes = async () => {
+    try {
+      const fetchedNotes = await noteService.getAllNotes();
+      setNotes(fetchedNotes);
+    } catch (error) {
+      setError('Error fetching notes. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  useEffect(() => {
+    setFilteredNotes(notes);
+  }, [notes]);
+
+
+  useEffect(() => {
+    const query = searchQuery.toLowerCase();
+    const result =  notes.filter(note => note.title.toLowerCase().includes(query) || note.text.toLowerCase().includes(query))
+    setFilteredNotes(result);
+  }, [searchQuery]);
   return (
     <>
       <Header/>
-      <NoteProvider>
-        <Search/>
-        <NoteList/>
-        <IconAddButton>
-          <IconButton icon="add" onPress={() => setCreateEditNoteState(true)} backgroundColor="primary" color="light"/>
-        </IconAddButton>
-        <CreateEditNote/>
-      </NoteProvider>
+      <Search/>
+      <NoteList loading={loading} error={error} notes={filteredNotes}/>
+      <IconAddButton>
+        <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light"/>
+      </IconAddButton>
+      <CreateEditNote onNoteUpdate={onNoteUpdate}/>
     </>
   )
 }
