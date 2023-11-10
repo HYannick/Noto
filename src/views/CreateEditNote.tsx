@@ -9,6 +9,7 @@ import {useInject} from '../domain/hooks/UseInject.ts';
 import {INoteService} from '../primary/note/NoteService.tsx';
 import {useAppStore} from '../primary/stores/app.store.ts';
 import {useNoteStore} from '../primary/stores/note.store.ts';
+import OptionMenu from '../primary/common/OptionMenu.tsx';
 
 export const CreateEditNoteForm = styled.form`
   transform: translateY(${(props: { isOpen: boolean }) => props.isOpen ? '0' : '100vh'});
@@ -64,6 +65,13 @@ export const CreateEditNoteForm = styled.form`
     font-family: var(--main-font);
   }
 `
+
+
+export const NoteHeaderActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+`
 export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => void }) {
   const currentNote = useNoteStore(state => state.currentNote)
   const setCurrentNote = useNoteStore(state => state.setCurrentNote)
@@ -81,6 +89,16 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
     setNoteToCreate({...noteToCreate, [key]: value})
   }
 
+  const resetNote = () => {
+    setNoteToCreate(initialValues)
+    setCurrentNote(null);
+  }
+  const goBack = async (e: any) => {
+    e.preventDefault();
+    await saveNote(e);
+    closeNoteEdit();
+    resetNote()
+  }
   const saveNote = async (e: FormEvent) => {
     e.preventDefault();
     if (!noteToCreate.text) return;
@@ -96,24 +114,24 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
     setCurrentNote(updatedNote);
     onNoteUpdate();
   };
-
-  const goBack = async (e: any) => {
-    e.preventDefault();
-    await saveNote(e);
-    closeNoteEdit();
-    resetNote()
-  }
-
   const deleteNote = async (e: any) => {
     e.preventDefault();
     if (!currentNote) return;
     await noteService.deleteNoteById(currentNote.id)
     goBack(e);
   }
-  const resetNote = () => {
-    setNoteToCreate(initialValues)
-    setCurrentNote(null);
-  }
+  const optionsList = [
+    {
+      label: t('createNote.actions.delete'),
+      action: deleteNote
+    },
+    {
+      label: t('createNote.actions.save'),
+      action: saveNote
+    }
+  ]
+
+
 
   useEffect(() => {
     if (currentNote) {
@@ -121,10 +139,12 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
     }
   }, [currentNote]);
   return (
-    <CreateEditNoteForm isOpen={createEditNoteOpen} onSubmit={saveNote}>
+    <CreateEditNoteForm  isOpen={createEditNoteOpen} onSubmit={saveNote}>
       <div className="create-note-header">
-        <IconButton dataTestId="back-button" icon="back" onPress={goBack}/>
-        {currentNote && <IconButton dataTestId="delete-button" icon="trash" onPress={deleteNote}/>}
+        <NoteHeaderActions className="create-note-actions">
+          <IconButton dataTestId="back-button" icon="back" onPress={goBack}/>
+          {currentNote && <OptionMenu optionList={optionsList} />}
+        </NoteHeaderActions>
         <div className="create-note-title">
           <InputField type="text"
                       dataTestId="title-input"
@@ -142,7 +162,7 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
                   onInput={(e: ChangeEvent<HTMLTextAreaElement>) => updateNote('text', e.target.value)}></textarea>
       </div>
       <div className="create-note-footer">
-        <DefaultButton dataTestId="save-button" type="submit" icon="save" label="Save"/>
+        <DefaultButton dataTestId="save-button" type="submit" icon="save" label={t('buttons.save')}/>
       </div>
     </CreateEditNoteForm>
   )

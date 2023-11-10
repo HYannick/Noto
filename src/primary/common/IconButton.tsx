@@ -3,19 +3,27 @@ import getIcon, {IconName} from '../../assets/svg/icons';
 
 type IconButtonVariant = 'default' | 'borderless';
 type IconButtonProps = {
-  onPress?: (e: Event) => any;
+  onPress?: (e: any) => any;
   icon: IconName;
   color?: string;
   backgroundColor?: string;
   variant?: IconButtonVariant;
   dataTestId?: string;
 }
-const variantStyles = (props: { variant: string }) => {
+const variantStyles = (props: { variant: string, backgroundColor: string }) => {
   if (props.variant === 'default') {
     return (
       `
+        background: var(--color-${props.backgroundColor});
         box-shadow: inset 0 0 0 0.1rem var(--color-dark);
         transform: translateY(-0.6rem);
+      `
+    )
+  }
+  if (props.variant === 'borderless') {
+    return (
+      `
+        background: transparent;
       `
     )
   }
@@ -31,6 +39,9 @@ export const IconContainer = styled.span`
   path {
     stroke: var(--color-${(props) => props.color})
   }
+  rect {
+    fill: var(--color-${(props) => props.color});
+  }
 `
 
 export const IconButtonComp = styled.button`
@@ -40,11 +51,11 @@ export const IconButtonComp = styled.button`
   z-index: 1;
   border-radius: 0.5rem;
   border: none;
-  background: var(--color-dark);
+  background: ${(props: { variant: string }) => props.variant === 'borderless' ? 'transparent' : 'var(--color-dark)'};
   cursor: pointer;
   &:active {
     .icon-button-backdrop {
-      transform: translateY(-0.2rem);
+      transform: ${(props: any) => props.variant === 'borderless' ? 'none' : 'translateY(-0.2rem)'};
     }
   }
 `
@@ -61,12 +72,11 @@ export const IconButtonContent = styled.div`
   z-index: -1;
   border-radius: 0.5rem;
   border: none;
-  background: var(--color-${(props) => props.backgroundColor});
-  ${(props: { variant: IconButtonVariant }) => variantStyles(props)}
+  ${(props: { variant: string, backgroundColor: string }) => variantStyles(props)}
 `
 export default function IconButton({dataTestId, onPress, icon, color = 'dark',backgroundColor= 'light', variant = 'default'}: IconButtonProps) {
   return (
-    <IconButtonComp data-testid={dataTestId} onClick={onPress}>
+    <IconButtonComp data-testid={dataTestId} onClick={onPress} variant={variant}>
       <IconButtonContent className="icon-button-backdrop" variant={variant} backgroundColor={backgroundColor}>
          <IconContainer color={color}>
           {getIcon(icon)}

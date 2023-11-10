@@ -106,7 +106,12 @@ export default function SideBar() {
   const {t} = useTranslation();
   const {switchTheme, themeIcon} = useTheme();
 
-  function clearData() {
+  const setLanguage = (lang: string) => {
+    localforage.setItem('currentLang', lang)
+    changeLanguage(lang)
+  }
+
+  const clearData = () => {
     localforage.setItem('notes', [])
     setNotes([])
   }
@@ -130,16 +135,16 @@ export default function SideBar() {
             </div>
             <div className="user-infos">
               <div className="user-input" data-testid="user-input">
-                <InputField type="text" placeholder={t('options.userInfos.placeholder')}/>
+                <InputField value="" type="text" onInput={() => console.log('inputing')} placeholder={t('options.userInfos.placeholder')}/>
               </div>
               <DefaultButton dataTestId="user-save-button" label={t('buttons.save')}/>
             </div>
           </AppUserInfos>
           <div className="app-settings">
             <div className="app-languages">
-              <IconButton icon="en-flag" color="none" onPress={() => changeLanguage('en')} dataTestId="en-language-button"/>
-              <IconButton icon="de-flag" color="none" onPress={() => changeLanguage('de')} dataTestId="de-language-button"/>
-              <IconButton icon="fr-flag" color="none" onPress={() => changeLanguage('fr')} dataTestId="fr-language-button"/>
+              <IconButton icon="en-flag" color="none" onPress={() => setLanguage('en')} dataTestId="en-language-button"/>
+              <IconButton icon="de-flag" color="none" onPress={() => setLanguage('de')} dataTestId="de-language-button"/>
+              <IconButton icon="fr-flag" color="none" onPress={() => setLanguage('fr')} dataTestId="fr-language-button"/>
             </div>
             <div className="app-theme">
               <IconButton icon={themeIcon as IconName} onPress={switchTheme}/>

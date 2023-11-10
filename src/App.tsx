@@ -7,6 +7,8 @@ import {IContainer} from './domain/IContainer.ts';
 import {NoteService} from './primary/note/NoteService.tsx';
 import {ContainerProvider} from './primary/common/ContainerProvider.tsx';
 import {NoteResource} from './secondary/note/NoteResource.ts';
+import localforage from 'localforage';
+import {changeLanguage} from 'i18next';
 
 const storage = initDB();
 
@@ -25,9 +27,20 @@ const container: IContainer = {
 
 function App() {
   const {setTheme} = useTheme();
+  const getLanguage = async () => {
+    let currentLang = await localforage.getItem('currentLang') as string;
+    if (!currentLang) {
+      currentLang = 'en';
+      await localforage.setItem('currentLang', currentLang);
+    }
+    changeLanguage(currentLang);
+  }
   useEffect(() => {
     setTheme();
+    getLanguage();
   }, [])
+
+
   return (
     <ContainerProvider container={container}>
       <HomeView/>

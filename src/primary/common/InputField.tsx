@@ -13,9 +13,10 @@ export const InputFieldStyle = styled.input`
   color: var(--color-dark);
 `
 export type InputFieldProps = {
-  value: string; type: string;
-  placeholder: string;
-  variant: 'default' | 'borderless',
+  value: string;
+  type: string;
+  placeholder?: string;
+  variant?: 'default' | 'borderless',
   onInput: (e: any) => void;
   dataTestId?: string;
 }

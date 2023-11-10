@@ -18,6 +18,10 @@ export default {
       placeholders: {
         title: 'Titel',
         text: 'Hinweis'
+      },
+      actions: {
+        save: 'Speichern notizen',
+        delete: 'Löschen notizen',
       }
     },
     options: {

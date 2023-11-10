@@ -1,26 +1,24 @@
-import {AppContextValues} from '../../src/primary/common/contexts/AppContext';
 import {vi} from 'vitest';
-import {NoteContextValues} from '../../src/primary/common/contexts/NoteContext';
 import {INoteService} from '../../src/primary/note/NoteService.tsx';
 import {NoteResourceRepository} from '../../src/secondary/note/NoteResource.ts';
 
-export const mockAppContextValues = (opts?: Partial<AppContextValues>) => ({
-  createEditNoteOpen: false,
-  setCreateEditNoteState: vi.fn(),
-  sidebarState: {
-    sidebarOpen: false,
-  },
-  setSidebarState: vi.fn(),
-  ...opts,
-}) as AppContextValues;
-
-export const mockNoteContextValues = (opts?: Partial<NoteContextValues>) => ({
-  currentNote: null,
-  setCurrentNote: vi.fn(),
-  notes: [],
-  setNotes: vi.fn(),
-  ...opts,
-}) as NoteContextValues;
+// export const mockAppContextValues = (opts?: Partial<AppContextValues>) => ({
+//   createEditNoteOpen: false,
+//   setCreateEditNoteState: vi.fn(),
+//   sidebarState: {
+//     sidebarOpen: false,
+//   },
+//   setSidebarState: vi.fn(),
+//   ...opts,
+// }) as AppContextValues;
+//
+// export const mockNoteContextValues = (opts?: Partial<NoteContextValues>) => ({
+//   currentNote: null,
+//   setCurrentNote: vi.fn(),
+//   notes: [],
+//   setNotes: vi.fn(),
+//   ...opts,
+// }) as NoteContextValues;
 
 export const mockNoteService = (opts?: Partial<INoteService>) => ({
   createNote: vi.fn(),

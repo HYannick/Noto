@@ -18,6 +18,10 @@ export default {
       placeholders: {
         title: 'Title',
         text: 'Note'
+      },
+      actions: {
+        save: 'Save note',
+        delete: 'Delete note'
       }
     },
     options: {
