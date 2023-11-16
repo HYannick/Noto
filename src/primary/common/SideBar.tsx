@@ -70,8 +70,8 @@ export const AppUserInfos = styled.div`
   margin-bottom: 2.1rem;
 
   .user-avatar {
-    width: 10rem;
-    height: 10rem;
+    width: 11rem;
+    height: 11rem;
     border-radius: 0.5rem;
     border: 0.1rem solid var(--color-dark);
     overflow: hidden;
