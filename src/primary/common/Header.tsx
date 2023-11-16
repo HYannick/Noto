@@ -1,10 +1,10 @@
-import sampleAvatar from '../../assets/sample-avatar.png'
 import styled from '@emotion/styled';
 import {useTranslation} from 'react-i18next';
 import IconButton from './IconButton.tsx';
 import SideBar from './SideBar.tsx';
 import {useAppStore} from '../stores/app.store.ts';
 import {useUserStore} from '../stores/user.store.ts';
+import Image from './Image.tsx';
 
 export const HeaderContainer = styled.div`
   display: flex;
@@ -48,10 +48,13 @@ export default function Header() {
   const {t} = useTranslation();
   const openSidebar = useAppStore((state) => state.openSidebar)
   const {username} = useUserStore((state) => state)
+
+  const avatar = useUserStore((state) => state.avatar);
+
   return (
     <HeaderContainer>
       <div className="greeting-container">
-        <div className="avatar"><img src={sampleAvatar} alt="avatar"/></div>
+        <div className="avatar"><Image src={avatar} alt="avatar"/></div>
         <div className="greeting-text">
           <p>{t('hello')}</p>
           <p className="greeting-username">{username}</p>

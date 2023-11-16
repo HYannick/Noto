@@ -1,7 +1,6 @@
 import IconButton from './IconButton.tsx';
 import {changeLanguage} from 'i18next';
 import styled from '@emotion/styled';
-import sampleAvatar from '../../assets/sample-avatar.png'
 import InputField from './InputField.tsx';
 import {useTranslation} from 'react-i18next';
 import DefaultButton from './DefaultButton.tsx';
@@ -15,6 +14,8 @@ import {useInject} from '../../domain/hooks/UseInject.ts';
 import {IUserService} from '../user/UserService.ts';
 import {useUserStore} from '../stores/user.store.ts';
 import {UserToSave} from '../../domain/User.ts';
+import ImageUploader from './ImageUploader.tsx';
+import {ImageBlob} from '../../domain/ImageBlob.ts';
 
 export const SideBarContainer = styled.div`
   position: fixed;
@@ -108,22 +109,26 @@ export default function SideBar() {
   const sidebarOpen = useAppStore((state) => state.sidebarOpen)
   const setNotes = useNoteStore((state) => state.setNotes)
   const userService = useInject('userService') as IUserService;
-  const {username: defaultUsername, setUserInfos} = useUserStore((state) => state);
+  const {username: defaultUsername, avatar: defaultAvatar, setUserInfos} = useUserStore((state) => state);
   const {t} = useTranslation();
   const {switchTheme, themeIcon} = useTheme();
   const [username, setUsername] = useState('');
+  const [avatar, setAvatar] = useState<ImageBlob>(null);
   const updateUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!username) return;
 
     const userToSave: UserToSave = {
       username,
-      avatar: ''
+      avatar,
     }
     await userService.saveUser(userToSave)
     setUserInfos(userToSave);
   }
-
+  const updateAvatar = (blob: Blob) => {
+    if(!blob) return;
+    setAvatar(blob);
+  }
   const setLanguage = (lang: string) => {
     localforage.setItem('currentLang', lang)
     changeLanguage(lang)
@@ -137,6 +142,10 @@ export default function SideBar() {
   useEffect(() => {
     setUsername(defaultUsername);
   }, [defaultUsername]);
+
+  useEffect(() => {
+    setAvatar(defaultAvatar);
+  }, [defaultAvatar]);
   return (
     <>
       <SideBarContainer isOpen={sidebarOpen}>
@@ -152,11 +161,12 @@ export default function SideBar() {
         <div className="app-options">
           <AppUserInfos>
             <div className="user-avatar" data-testid="user-avatar">
-              <img src={sampleAvatar} alt="avatar"/>
+              <ImageUploader value={defaultAvatar} onImageUploaded={updateAvatar}/>
             </div>
             <form className="user-infos" onSubmit={updateUser}>
               <div className="user-input" data-testid="user-input">
-                <InputField value={username} type="text" onInput={(e) => setUsername(e.target.value)} placeholder={t('options.userInfos.placeholder')}/>
+                <InputField value={username} type="text" onInput={(e) => setUsername(e.target.value)}
+                            placeholder={t('options.userInfos.placeholder')}/>
               </div>
               <DefaultButton dataTestId="user-save-button" label={t('buttons.save')}/>
             </form>

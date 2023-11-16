@@ -1,0 +1,1 @@
+export type ImageBlob = Blob | null;

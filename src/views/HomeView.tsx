@@ -44,7 +44,7 @@ export default function HomeView() {
     } catch (error) {
       setUserInfos({
         username: 'Stranger',
-        avatar: 'default-avatar.png',
+        avatar: null,
       });
     }
   }
