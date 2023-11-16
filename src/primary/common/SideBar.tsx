@@ -13,7 +13,6 @@ import {FormEvent, useEffect, useState} from 'react';
 import {useInject} from '../../domain/hooks/UseInject.ts';
 import {IUserService} from '../user/UserService.ts';
 import {useUserStore} from '../stores/user.store.ts';
-import {UserToSave} from '../../domain/User.ts';
 import ImageUploader from './ImageUploader.tsx';
 import {ImageBlob} from '../../domain/ImageBlob.ts';
 
@@ -112,21 +111,22 @@ export default function SideBar() {
   const {username: defaultUsername, avatar: defaultAvatar, setUserInfos} = useUserStore((state) => state);
   const {t} = useTranslation();
   const {switchTheme, themeIcon} = useTheme();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('Stranger');
   const [avatar, setAvatar] = useState<ImageBlob>(null);
+
+  useEffect(() => {
+    setUsername(defaultUsername);
+    setAvatar(defaultAvatar);
+  }, [defaultAvatar, defaultUsername]);
+
   const updateUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!username) return;
-
-    const userToSave: UserToSave = {
-      username,
-      avatar,
-    }
+    const userToSave = {username, avatar,}
     await userService.saveUser(userToSave)
     setUserInfos(userToSave);
   }
   const updateAvatar = (blob: Blob) => {
-    if(!blob) return;
+    if (!blob) return;
     setAvatar(blob);
   }
   const setLanguage = (lang: string) => {
@@ -139,13 +139,6 @@ export default function SideBar() {
     setNotes([])
   }
 
-  useEffect(() => {
-    setUsername(defaultUsername);
-  }, [defaultUsername]);
-
-  useEffect(() => {
-    setAvatar(defaultAvatar);
-  }, [defaultAvatar]);
   return (
     <>
       <SideBarContainer isOpen={sidebarOpen}>

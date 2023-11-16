@@ -66,7 +66,6 @@ export const CreateEditNoteForm = styled.form`
   }
 `
 
-
 export const NoteHeaderActions = styled.div`
   display: flex;
   justify-content: space-between;
