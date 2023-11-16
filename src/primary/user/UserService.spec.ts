@@ -16,7 +16,7 @@ describe('UserService', () => {
   });
   it('should create a note', async () => {
     const userService = UserService(userResource);
-    const user = await userService.saveUser({username: 'Kristin', avatar: 'ortega.jpg'});
+    const user = await userService.saveUser({username: 'Kristin', avatar: null});
     expect(userResource.saveUser).toHaveBeenCalledWith({name: 'Kristin', avatar: 'ortega.jpg'});
     expect(user).toEqual(mockUser())
   });
