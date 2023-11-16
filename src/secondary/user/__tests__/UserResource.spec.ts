@@ -4,7 +4,7 @@ import {User, UserToSave} from '../../../domain/User.ts';
 
 export const mockUser = (opts?: Partial<User>): User => ({
   username: 'Lena',
-  avatar: 'avatar.jpg',
+  avatar: null,
   ...opts
 })
 const mockedDB = {
@@ -23,14 +23,14 @@ describe('UserResource', () => {
   it('should set user infos', async () => {
     const mockedUserToSave: UserToSave = {
       username: 'Kristin',
-      avatar: 'kristin.jpg'
+      avatar: null,
     }
     const resource = UserResource(mockedDB);
     const user = await resource.saveUser(mockedUserToSave);
     expect(mockedDB.setItem).toHaveBeenCalledWith('user', mockedUserToSave)
     expect(user).toEqual(mockUser({
       username: 'Kristin',
-      avatar: 'kristin.jpg'
+      avatar: null
     }))
   });
 });
