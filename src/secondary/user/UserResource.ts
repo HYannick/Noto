@@ -1,20 +1,32 @@
-import {Note} from '../../domain/Note.ts';
+import {User, UserToSave} from '../../domain/User.ts';
 
-export interface NoteResourceRepository {
-  getAllNotes: () => Promise<Note[]>
+export interface UserResourceRepository {
+  getUserInfo: () => Promise<User>;
+  saveUser: (userToSave: UserToSave) => Promise<User>
 }
 
-export const UserResource = (storage: LocalForage): NoteResourceRepository => {
-  const getAllNotes = async (): Promise<Note[]> => {
+export const UserResource = (storage: LocalForage): UserResourceRepository => {
+  const getUserInfo = async (): Promise<User> => {
     try {
-      const notes = await storage.getItem('notes') as Note[];
-      if(!notes) throw Error;
-      return notes;
+      const user = await storage.getItem('user') as User;
+      if(!user) throw Error;
+      return user;
     } catch (e) {
-      return []
+      throw Error;
     }
   }
+
+  const saveUser = async (userToSave: UserToSave): Promise<User> => {
+    try {
+      await storage.setItem('user', userToSave) as User;
+      return userToSave;
+    } catch (e) {
+      throw Error;
+    }
+  }
+
   return {
-    getAllNotes
+    getUserInfo,
+    saveUser,
   }
 }

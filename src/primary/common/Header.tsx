@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import IconButton from './IconButton.tsx';
 import SideBar from './SideBar.tsx';
 import {useAppStore} from '../stores/app.store.ts';
+import {useUserStore} from '../stores/user.store.ts';
 
 export const HeaderContainer = styled.div`
   display: flex;
@@ -46,14 +47,14 @@ export const HeaderContainer = styled.div`
 export default function Header() {
   const {t} = useTranslation();
   const openSidebar = useAppStore((state) => state.openSidebar)
-
+  const {username} = useUserStore((state) => state)
   return (
     <HeaderContainer>
       <div className="greeting-container">
         <div className="avatar"><img src={sampleAvatar} alt="avatar"/></div>
         <div className="greeting-text">
           <p>{t('hello')}</p>
-          <p className="greeting-username">Ninska</p>
+          <p className="greeting-username">{username}</p>
         </div>
       </div>
       <IconButton icon="menu" onPress={openSidebar}/>

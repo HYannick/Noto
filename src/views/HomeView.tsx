@@ -11,6 +11,8 @@ import {INoteService} from '../primary/note/NoteService.tsx';
 import {useAppStore} from '../primary/stores/app.store.ts';
 import {useNoteStore} from '../primary/stores/note.store.ts';
 import {useSearchStore} from '../primary/stores/search.store.ts';
+import {IUserService} from '../primary/user/UserService.ts';
+import {useUserStore} from '../primary/stores/user.store.ts';
 
 export const IconAddButton = styled.div`
   position: fixed;
@@ -26,11 +28,25 @@ export default function HomeView() {
   const notes = useNoteStore(state => state.noteList)
   const openNoteEdit = useAppStore(state => state.openNoteEdit)
   const noteService = useInject('noteService') as INoteService
+  const userService = useInject('userService') as IUserService
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
+  const setUserInfos  = useUserStore(state => state.setUserInfos)
   const onNoteUpdate = () => {
     fetchNotes();
+  }
+
+  const fetchUser = async () => {
+    try {
+      const fetchedUser = await userService.getUserInfo();
+      setUserInfos(fetchedUser);
+    } catch (error) {
+      setUserInfos({
+        username: 'Stranger',
+        avatar: 'default-avatar.png',
+      });
+    }
   }
 
   const fetchNotes = async () => {
@@ -44,9 +60,9 @@ export default function HomeView() {
     }
   }
 
-
   useEffect(() => {
     fetchNotes();
+    fetchUser();
   }, []);
 
   useEffect(() => {

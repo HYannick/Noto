@@ -9,13 +9,17 @@ import {ContainerProvider} from './primary/common/ContainerProvider.tsx';
 import {NoteResource} from './secondary/note/NoteResource.ts';
 import localforage from 'localforage';
 import {changeLanguage} from 'i18next';
+import {UserService} from './primary/user/UserService.ts';
+import {UserResource} from './secondary/user/UserResource.ts';
 
 const storage = initDB();
 
 const noteResource = NoteResource(storage);
+const userResource = UserResource(storage);
 const container: IContainer = {
   registry: {
-    noteService: NoteService(noteResource)
+    noteService: NoteService(noteResource),
+    userService: UserService(userResource),
   },
   resolve(identifier: string) {
     if (!this.registry.hasOwnProperty(identifier)) {

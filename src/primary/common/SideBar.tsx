@@ -10,6 +10,11 @@ import {IconName} from '../../assets/svg/icons';
 import * as localforage from 'localforage';
 import {useAppStore} from '../stores/app.store.ts';
 import {useNoteStore} from '../stores/note.store.ts';
+import {FormEvent, useEffect, useState} from 'react';
+import {useInject} from '../../domain/hooks/UseInject.ts';
+import {IUserService} from '../user/UserService.ts';
+import {useUserStore} from '../stores/user.store.ts';
+import {UserToSave} from '../../domain/User.ts';
 
 export const SideBarContainer = styled.div`
   position: fixed;
@@ -102,9 +107,22 @@ export default function SideBar() {
   const closeSidebar = useAppStore((state) => state.closeSidebar)
   const sidebarOpen = useAppStore((state) => state.sidebarOpen)
   const setNotes = useNoteStore((state) => state.setNotes)
-
+  const userService = useInject('userService') as IUserService;
+  const {username: defaultUsername, setUserInfos} = useUserStore((state) => state);
   const {t} = useTranslation();
   const {switchTheme, themeIcon} = useTheme();
+  const [username, setUsername] = useState('');
+  const updateUser = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!username) return;
+
+    const userToSave: UserToSave = {
+      username,
+      avatar: ''
+    }
+    await userService.saveUser(userToSave)
+    setUserInfos(userToSave);
+  }
 
   const setLanguage = (lang: string) => {
     localforage.setItem('currentLang', lang)
@@ -116,6 +134,9 @@ export default function SideBar() {
     setNotes([])
   }
 
+  useEffect(() => {
+    setUsername(defaultUsername);
+  }, [defaultUsername]);
   return (
     <>
       <SideBarContainer isOpen={sidebarOpen}>
@@ -133,12 +154,12 @@ export default function SideBar() {
             <div className="user-avatar" data-testid="user-avatar">
               <img src={sampleAvatar} alt="avatar"/>
             </div>
-            <div className="user-infos">
+            <form className="user-infos" onSubmit={updateUser}>
               <div className="user-input" data-testid="user-input">
-                <InputField value="" type="text" onInput={() => console.log('inputing')} placeholder={t('options.userInfos.placeholder')}/>
+                <InputField value={username} type="text" onInput={(e) => setUsername(e.target.value)} placeholder={t('options.userInfos.placeholder')}/>
               </div>
               <DefaultButton dataTestId="user-save-button" label={t('buttons.save')}/>
-            </div>
+            </form>
           </AppUserInfos>
           <div className="app-settings">
             <div className="app-languages">
