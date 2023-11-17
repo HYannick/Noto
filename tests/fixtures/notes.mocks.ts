@@ -1,4 +1,4 @@
-import {Note, NoteToCreate} from '../../src/domain/Note';
+import {Note, NoteToCreate} from '@/domain/Note';
 
 export const mockNote = (opts?: Partial<Note>): Note => ({
   id: 'vapor-note',
