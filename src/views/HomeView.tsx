@@ -7,7 +7,7 @@ import IconButton from '@/primary/common/IconButton.tsx';
 import styled from '@emotion/styled';
 import {Note} from '@/domain/Note.ts';
 import {useInject} from '@/domain/hooks/UseInject.ts';
-import {INoteService} from '@/primary/note/NoteService.tsx';
+import {INoteService} from '@/primary/note/NoteService.ts';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import {useSearchStore} from '@/primary/stores/search.store.ts';

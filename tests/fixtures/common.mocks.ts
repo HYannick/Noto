@@ -1,5 +1,5 @@
 import {vi} from 'vitest';
-import {INoteService} from '@/primary/note/NoteService.tsx';
+import {INoteService} from '@/primary/note/NoteService.ts';
 import {NoteResourceRepository} from '@/secondary/note/NoteResource.ts';
 import {UserResourceRepository} from '@/secondary/user/UserResource.ts';
 import {IUserService} from '@/primary/user/UserService.ts';

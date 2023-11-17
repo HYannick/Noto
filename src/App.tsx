@@ -4,7 +4,7 @@ import HomeView from './views/HomeView.tsx';
 import {useEffect} from 'react';
 import {useTheme} from './domain/hooks/UseTheme.ts';
 import {IContainer} from './domain/IContainer.ts';
-import {NoteService} from './primary/note/NoteService.tsx';
+import {NoteService} from './primary/note/NoteService.ts';
 import {ContainerProvider} from './primary/common/ContainerProvider.tsx';
 import {NoteResource} from './secondary/note/NoteResource.ts';
 import localforage from 'localforage';

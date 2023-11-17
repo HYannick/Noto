@@ -1,5 +1,5 @@
 import { expect, describe, vi, it } from 'vitest';
-import {NoteService} from '@/primary/note/NoteService.tsx';
+import {NoteService} from '@/primary/note/NoteService.ts';
 import {mockNote, mockNoteToCreate} from '@tests/fixtures/notes.mocks.ts';
 import {mockNoteResource} from '@tests/fixtures/common.mocks.ts';
 

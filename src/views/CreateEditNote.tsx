@@ -6,7 +6,7 @@ import InputField from '@/primary/common/InputField.tsx';
 import {useTranslation} from 'react-i18next';
 import {Note, NoteToCreate} from '@/domain/Note.ts';
 import {useInject} from '@/domain/hooks/UseInject.ts';
-import {INoteService} from '@/primary/note/NoteService.tsx';
+import {INoteService} from '@/primary/note/NoteService.ts';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import OptionMenu from '@/primary/common/OptionMenu.tsx';
@@ -125,6 +125,10 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
     {
       label: t('createNote.actions.save'),
       action: saveNote
+    },
+    {
+      label: t('createNote.actions.cancel'),
+      action: goBack
     }
   ]
 
