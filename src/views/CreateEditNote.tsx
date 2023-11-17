@@ -72,10 +72,8 @@ export const NoteHeaderActions = styled.div`
   position: relative;
 `
 export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => void }) {
-  const currentNote = useNoteStore(state => state.currentNote)
-  const setCurrentNote = useNoteStore(state => state.setCurrentNote)
-  const closeNoteEdit = useAppStore(state => state.closeNoteEdit)
-  const createEditNoteOpen = useAppStore(state => state.createEditNoteOpen)
+  const {currentNote, setCurrentNote} = useNoteStore()
+  const {closeNoteEdit, createEditNoteOpen} = useAppStore()
   const {t} = useTranslation();
   const noteService = useInject('noteService') as INoteService;
   const currentDate = new Date();

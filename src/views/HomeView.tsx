@@ -34,9 +34,6 @@ export default function HomeView() {
   const [error, setError] = useState<string | null>(null);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
   const setUserInfos  = useUserStore(state => state.setUserInfos)
-  const onNoteUpdate = () => {
-    fetchNotes();
-  }
 
   const fetchUser = async () => {
     try {
@@ -85,7 +82,7 @@ export default function HomeView() {
       <IconAddButton>
         <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light"/>
       </IconAddButton>
-      <CreateEditNote onNoteUpdate={onNoteUpdate}/>
+      <CreateEditNote onNoteUpdate={fetchNotes}/>
     </>
   )
 }
