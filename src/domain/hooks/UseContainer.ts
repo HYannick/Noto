@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {ContainerContext} from '../../primary/common/ContainerProvider.tsx';
+import {ContainerContext} from '@/primary/common/ContainerProvider.tsx';
 import {IContainer} from '../IContainer.ts';
 
 export const useContainer = (): IContainer => {

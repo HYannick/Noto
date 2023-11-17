@@ -1,5 +1,5 @@
-import {ImageBlob} from '../domain/ImageBlob.ts';
-import sampleAvatar from '../assets/sample-avatar.png';
+import {ImageBlob} from '@/domain/ImageBlob.ts';
+import sampleAvatar from '@/assets/sample-avatar.png';
 
 export const resizeImage = (file: File, maxWidth: number, maxHeight: number): Promise<Blob> => {
   return new Promise((resolve) => {

@@ -1,5 +1,5 @@
-import {User, UserToSave} from '../../domain/User.ts';
-import {UserResourceRepository} from '../../secondary/user/UserResource.ts';
+import {User, UserToSave} from '@/domain/User.ts';
+import {UserResourceRepository} from '@/secondary/user/UserResource.ts';
 
 export interface IUserService {
   getUserInfo: () => Promise<User>;

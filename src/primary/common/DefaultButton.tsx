@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import getIcon, {IconName} from '../../assets/svg/icons';
+import getIcon, {IconName} from '@/assets/svg/icons';
 
 type ButtonVariant = 'default' | 'small';
 type ButtonProps = {

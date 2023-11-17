@@ -1,7 +1,7 @@
 import { expect, describe, vi, it } from 'vitest';
-import {NoteService} from '../NoteService.tsx';
-import {mockNote, mockNoteToCreate} from '../../../../tests/fixtures/notes.mocks.ts';
-import {mockNoteResource} from '../../../../tests/fixtures/common.mocks.ts';
+import {NoteService} from '@/primary/note/NoteService.tsx';
+import {mockNote, mockNoteToCreate} from '@tests/fixtures/notes.mocks.ts';
+import {mockNoteResource} from '@tests/fixtures/common.mocks.ts';
 
 const noteResource = mockNoteResource({
   getAllNotes: vi.fn().mockResolvedValue([mockNote()]),

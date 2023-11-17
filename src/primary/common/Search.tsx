@@ -3,7 +3,7 @@ import IconButton from './IconButton.tsx';
 import {useTranslation} from 'react-i18next';
 import InputField from './InputField.tsx';
 import {FormEvent, useState} from 'react';
-import {useSearchStore} from '../stores/search.store.ts';
+import {useSearchStore} from '@/primary/stores/search.store.ts';
 
 export const SearchContainer = styled.form`
   display: flex;

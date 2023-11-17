@@ -1,5 +1,5 @@
-import {NoteResourceRepository} from '../../secondary/note/NoteResource.ts';
-import {Note, NoteToCreate} from '../../domain/Note.ts';
+import {NoteResourceRepository} from '@/secondary/note/NoteResource.ts';
+import {Note, NoteToCreate} from '@/domain/Note.ts';
 
 export interface INoteService {
   getAllNotes: () => Promise<Note[]>;

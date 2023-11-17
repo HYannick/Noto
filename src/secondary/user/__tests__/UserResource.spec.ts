@@ -1,6 +1,6 @@
 import {expect, describe, vi, it} from 'vitest';
 import {UserResource} from '../UserResource.ts';
-import {User, UserToSave} from '../../../domain/User.ts';
+import {User, UserToSave} from '@/domain/User.ts';
 
 export const mockUser = (opts?: Partial<User>): User => ({
   username: 'Lena',

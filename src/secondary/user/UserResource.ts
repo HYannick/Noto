@@ -1,4 +1,4 @@
-import {User, UserToSave} from '../../domain/User.ts';
+import {User, UserToSave} from '@/domain/User.ts';
 
 export interface UserResourceRepository {
   getUserInfo: () => Promise<User>;

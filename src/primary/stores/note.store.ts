@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {Note} from '../../domain/Note.ts';
+import {Note} from '@/domain/Note.ts';
 
 interface NoteStoreState {
   currentNote: Note | null;

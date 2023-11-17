@@ -1,18 +1,19 @@
 import {useEffect, useState} from 'react';
-import Header from '../primary/common/Header.tsx';
-import Search from '../primary/common/Search.tsx';
-import NoteList from '../primary/note/NoteList.tsx';
+import Header from '@/primary/common/Header.tsx';
+import Search from '@/primary/common/Search.tsx';
+import NoteList from '@/primary/note/NoteList.tsx';
 import CreateEditNote from './CreateEditNote.tsx';
-import IconButton from '../primary/common/IconButton.tsx';
+import IconButton from '@/primary/common/IconButton.tsx';
 import styled from '@emotion/styled';
-import {Note} from '../domain/Note.ts';
-import {useInject} from '../domain/hooks/UseInject.ts';
-import {INoteService} from '../primary/note/NoteService.tsx';
-import {useAppStore} from '../primary/stores/app.store.ts';
-import {useNoteStore} from '../primary/stores/note.store.ts';
-import {useSearchStore} from '../primary/stores/search.store.ts';
-import {IUserService} from '../primary/user/UserService.ts';
-import {useUserStore} from '../primary/stores/user.store.ts';
+import {Note} from '@/domain/Note.ts';
+import {useInject} from '@/domain/hooks/UseInject.ts';
+import {INoteService} from '@/primary/note/NoteService.tsx';
+import {useAppStore} from '@/primary/stores/app.store.ts';
+import {useNoteStore} from '@/primary/stores/note.store.ts';
+import {useSearchStore} from '@/primary/stores/search.store.ts';
+import {IUserService} from '@/primary/user/UserService.ts';
+import {useUserStore} from '@/primary/stores/user.store.ts';
+import SideBar from '@/primary/common/SideBar.tsx';
 
 export const IconAddButton = styled.div`
   position: fixed;
@@ -79,6 +80,7 @@ export default function HomeView() {
     <>
       <Header/>
       <Search/>
+      <SideBar/>
       <NoteList loading={loading} error={error} notes={filteredNotes}/>
       <IconAddButton>
         <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light"/>

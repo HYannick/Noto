@@ -1,5 +1,5 @@
 import {createContext} from 'react';
-import {IContainer} from '../../domain/IContainer.ts';
+import {IContainer} from '@/domain/IContainer.ts';
 
 export const ContainerContext = createContext(null);
 

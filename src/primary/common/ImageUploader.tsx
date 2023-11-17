@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {useEffect, useRef} from 'react';
-import sampleAvatar from '../../assets/sample-avatar.png';
-import {previewImage, resizeImage} from '../../utils/image.utils.ts';
+import {previewImage, resizeImage} from '@utils/image.utils.ts';
+import {ImageBlob} from '@/domain/ImageBlob.ts';
 
 
 export const Uploader = styled.div`
@@ -24,8 +24,11 @@ export const Uploader = styled.div`
     outline: thin dotted;
   }
 `
-
-export default function ImageUploader({value = sampleAvatar, onImageUploaded}: any) {
+type ImageUploaderProps = {
+  value: ImageBlob,
+  onImageUploaded: (file: Blob) => void
+}
+export default function ImageUploader({value, onImageUploaded}: ImageUploaderProps) {
   const  labelRef = useRef(null);
   const saveAvatar = async (e: any) => {
     const resizedBlob = await resizeImage(e.target.files[0], 500, 500);
@@ -34,7 +37,7 @@ export default function ImageUploader({value = sampleAvatar, onImageUploaded}: a
   }
 
   useEffect(() => {
-    previewImage(labelRef.current, value);
+    previewImage(labelRef.current, value as Blob);
   }, [value]);
   return (
     <Uploader className="uploader">

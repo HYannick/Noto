@@ -1,6 +1,6 @@
 import { expect, describe, vi, it } from 'vitest';
-import {mockUserResource} from '../../../tests/fixtures/common.mocks.ts';
-import {mockUser} from '../../secondary/user/__tests__/UserResource.spec.ts';
+import {mockUserResource} from '@tests/fixtures/common.mocks.ts';
+import {mockUser} from '@/secondary/user/__tests__/UserResource.spec.ts';
 import {UserService} from './UserService.ts';
 
 const userResource = mockUserResource({

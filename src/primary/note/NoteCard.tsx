@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import {Note} from '../../domain/Note.ts';
+import {Note} from '@/domain/Note.ts';
 
 const StyledNoteCard = styled.div`
   position: relative;

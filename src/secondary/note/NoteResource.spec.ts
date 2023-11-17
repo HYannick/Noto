@@ -1,6 +1,6 @@
 import {expect, describe, vi, it, beforeEach} from 'vitest';
 import {NoteResource} from './NoteResource.ts';
-import {mockNote, mockNoteToCreate} from '../../../tests/fixtures/notes.mocks.ts';
+import {mockNote, mockNoteToCreate} from '@tests/fixtures/notes.mocks.ts';
 
 let mockedDB: any;
 

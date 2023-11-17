@@ -1,10 +1,10 @@
 import {NoteCard} from './NoteCard.tsx';
 import styled from '@emotion/styled';
-import {useInject} from '../../domain/hooks/UseInject.ts';
+import {useInject} from '@/domain/hooks/UseInject.ts';
 import {INoteService} from './NoteService.tsx';
-import {useAppStore} from '../stores/app.store.ts';
-import {useNoteStore} from '../stores/note.store.ts';
-import {Note} from '../../domain/Note.ts';
+import {useAppStore} from '@/primary/stores/app.store.ts';
+import {useNoteStore} from '@/primary/stores/note.store.ts';
+import {Note} from '@/domain/Note.ts';
 
 export const NoteContainer = styled.div`
   display: grid;

@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import {useTranslation} from 'react-i18next';
 import IconButton from './IconButton.tsx';
-import SideBar from './SideBar.tsx';
-import {useAppStore} from '../stores/app.store.ts';
-import {useUserStore} from '../stores/user.store.ts';
-import Image from './Image.tsx';
+import {useAppStore} from '@/primary/stores/app.store.ts';
+import {useUserStore} from '@/primary/stores/user.store.ts';
+import Image from '@/primary/common/Image.tsx';
 
 export const HeaderContainer = styled.div`
   display: flex;
@@ -61,7 +60,6 @@ export default function Header() {
         </div>
       </div>
       <IconButton icon="menu" onPress={openSidebar}/>
-      <SideBar/>
     </HeaderContainer>
   )
 }

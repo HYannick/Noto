@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
-import IconButton from '../primary/common/IconButton.tsx';
-import DefaultButton from '../primary/common/DefaultButton.tsx';
+import IconButton from '@/primary/common/IconButton.tsx';
+import DefaultButton from '@/primary/common/DefaultButton.tsx';
 import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
-import InputField from '../primary/common/InputField.tsx';
+import InputField from '@/primary/common/InputField.tsx';
 import {useTranslation} from 'react-i18next';
-import {Note, NoteToCreate} from '../domain/Note.ts';
-import {useInject} from '../domain/hooks/UseInject.ts';
-import {INoteService} from '../primary/note/NoteService.tsx';
-import {useAppStore} from '../primary/stores/app.store.ts';
-import {useNoteStore} from '../primary/stores/note.store.ts';
-import OptionMenu from '../primary/common/OptionMenu.tsx';
+import {Note, NoteToCreate} from '@/domain/Note.ts';
+import {useInject} from '@/domain/hooks/UseInject.ts';
+import {INoteService} from '@/primary/note/NoteService.tsx';
+import {useAppStore} from '@/primary/stores/app.store.ts';
+import {useNoteStore} from '@/primary/stores/note.store.ts';
+import OptionMenu from '@/primary/common/OptionMenu.tsx';
 
 export const CreateEditNoteForm = styled.form`
   transform: translateY(${(props: { isOpen: boolean }) => props.isOpen ? '0' : '100vh'});

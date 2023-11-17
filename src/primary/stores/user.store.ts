@@ -1,7 +1,7 @@
 import {create} from 'zustand';
-import {User} from '../../domain/User.ts';
-import {ImageBlob} from '../../domain/ImageBlob.ts';
-interface UserStoreState {
+import {User} from '@/domain/User.ts';
+import {ImageBlob} from '@/domain/ImageBlob.ts';
+export interface UserStoreState {
   username: string;
   avatar: ImageBlob;
   setUserInfos: (userInfos: User) => void

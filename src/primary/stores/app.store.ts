@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 
-interface AppStoreState {
+export interface AppStoreState {
   sidebarOpen: boolean,
   createEditNoteOpen: boolean,
   openSidebar: () => void,

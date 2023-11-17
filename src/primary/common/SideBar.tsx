@@ -4,17 +4,17 @@ import styled from '@emotion/styled';
 import InputField from './InputField.tsx';
 import {useTranslation} from 'react-i18next';
 import DefaultButton from './DefaultButton.tsx';
-import {useTheme} from '../../domain/hooks/UseTheme.ts';
-import {IconName} from '../../assets/svg/icons';
+import {useTheme} from '@/domain/hooks/UseTheme.ts';
+import {IconName} from '@assets/svg/icons';
 import * as localforage from 'localforage';
-import {useAppStore} from '../stores/app.store.ts';
-import {useNoteStore} from '../stores/note.store.ts';
+import {useAppStore} from '@/primary/stores/app.store.ts';
+import {useNoteStore} from '@/primary/stores/note.store.ts';
 import {FormEvent, useEffect, useState} from 'react';
-import {useInject} from '../../domain/hooks/UseInject.ts';
-import {IUserService} from '../user/UserService.ts';
-import {useUserStore} from '../stores/user.store.ts';
+import {useInject} from '@/domain/hooks/UseInject.ts';
+import {IUserService} from '@/primary/user/UserService.ts';
+import {useUserStore} from '@/primary/stores/user.store.ts';
 import ImageUploader from './ImageUploader.tsx';
-import {ImageBlob} from '../../domain/ImageBlob.ts';
+import {ImageBlob} from '@/domain/ImageBlob.ts';
 
 export const SideBarContainer = styled.div`
   position: fixed;
