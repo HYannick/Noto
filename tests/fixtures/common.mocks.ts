@@ -1,26 +1,44 @@
 import {vi} from 'vitest';
-import {INoteService} from '../../src/primary/note/NoteService.tsx';
-import {NoteResourceRepository} from '../../src/secondary/note/NoteResource.ts';
-import {UserResourceRepository} from '../../src/secondary/user/UserResource.ts';
-import {IUserService} from '../../src/primary/user/UserService.ts';
+import {INoteService} from '@/primary/note/NoteService.tsx';
+import {NoteResourceRepository} from '@/secondary/note/NoteResource.ts';
+import {UserResourceRepository} from '@/secondary/user/UserResource.ts';
+import {IUserService} from '@/primary/user/UserService.ts';
+import {AppStoreState} from '@/primary/stores/app.store.ts';
+import {UserStoreState} from '@/primary/stores/user.store.ts';
+import {IContainer} from '@/domain/IContainer.ts';
+import {NoteStoreState} from '@/primary/stores/note.store.ts';
 
-// export const mockAppContextValues = (opts?: Partial<AppContextValues>) => ({
-//   createEditNoteOpen: false,
-//   setCreateEditNoteState: vi.fn(),
-//   sidebarState: {
-//     sidebarOpen: false,
-//   },
-//   setSidebarState: vi.fn(),
-//   ...opts,
-// }) as AppContextValues;
-//
-// export const mockNoteContextValues = (opts?: Partial<NoteContextValues>) => ({
-//   currentNote: null,
-//   setCurrentNote: vi.fn(),
-//   notes: [],
-//   setNotes: vi.fn(),
-//   ...opts,
-// }) as NoteContextValues;
+export const mockAppStore = (opts?: Partial<AppStoreState>): AppStoreState => ({
+  sidebarOpen: false,
+  createEditNoteOpen: false,
+  openSidebar: vi.fn(),
+  closeSidebar: vi.fn(),
+  openNoteEdit: vi.fn(),
+  closeNoteEdit: vi.fn(),
+  ...opts
+});
+
+
+export const mockNoteStore = (opts?: Partial<NoteStoreState>): NoteStoreState => ({
+  currentNote: null,
+  noteList: [],
+  setCurrentNote: vi.fn(),
+  setNotes: vi.fn(),
+  ...opts
+});
+
+export const mockUserStore = (opts?: Partial<UserStoreState>): UserStoreState => ({
+  username: '',
+  avatar: null,
+  setUserInfos: vi.fn(),
+  ...opts
+});
+
+export const mockContainer = (opts?: Partial<IContainer>): IContainer => ({
+  registry: {},
+  resolve: vi.fn(),
+  ...opts
+});
 
 export const mockNoteService = (opts?: Partial<INoteService>) => ({
   createNote: vi.fn(),

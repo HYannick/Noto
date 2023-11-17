@@ -45,11 +45,8 @@ export const HeaderContainer = styled.div`
 
 export default function Header() {
   const {t} = useTranslation();
-  const openSidebar = useAppStore((state) => state.openSidebar)
-  const {username} = useUserStore((state) => state)
-
-  const avatar = useUserStore((state) => state.avatar);
-
+  const {openSidebar} = useAppStore()
+  const {username, avatar} = useUserStore();
   return (
     <HeaderContainer>
       <div className="greeting-container">
@@ -59,7 +56,7 @@ export default function Header() {
           <p className="greeting-username">{username}</p>
         </div>
       </div>
-      <IconButton icon="menu" onPress={openSidebar}/>
+      <IconButton dataTestId="menu-icon" icon="menu" onPress={openSidebar}/>
     </HeaderContainer>
   )
 }

@@ -31,8 +31,8 @@ export const NoteSection = styled.div`
 
 export default function NoteList({loading, error, notes}: any) {
   const noteService = useInject('noteService') as INoteService
-  const setCurrentNote = useNoteStore((state) => state.setCurrentNote);
-  const openNoteEdit = useAppStore((state) => state.openNoteEdit);
+  const {setCurrentNote} = useNoteStore((state) => state);
+  const {openNoteEdit} = useAppStore((state) => state);
 
   const openNote = async (noteId: string) => {
     const note = await noteService.getNoteById(noteId);

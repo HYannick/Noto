@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import {Note} from '@/domain/Note.ts';
 
-interface NoteStoreState {
+export interface NoteStoreState {
   currentNote: Note | null;
   noteList: Note[],
   setCurrentNote: (note: Note | null) => void,
