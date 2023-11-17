@@ -7,6 +7,8 @@ import {AppStoreState} from '@/primary/stores/app.store.ts';
 import {UserStoreState} from '@/primary/stores/user.store.ts';
 import {IContainer} from '@/domain/IContainer.ts';
 import {NoteStoreState} from '@/primary/stores/note.store.ts';
+import {FolderResourceRepository} from '@/secondary/folder/FolderResource.ts';
+import {IFolderService} from '@/primary/folder/FolderService.ts';
 
 export const mockAppStore = (opts?: Partial<AppStoreState>): AppStoreState => ({
   sidebarOpen: false,
@@ -41,12 +43,22 @@ export const mockContainer = (opts?: Partial<IContainer>): IContainer => ({
 });
 
 export const mockNoteService = (opts?: Partial<INoteService>) => ({
+  getAllNotes: vi.fn(),
   createNote: vi.fn(),
   updateNote: vi.fn(),
   deleteNoteById: vi.fn(),
   getNoteById: vi.fn(),
   ...opts,
 }) as INoteService;
+
+export const mockFolderService = (opts?: Partial<IFolderService>) => ({
+  getAllFolder: vi.fn(),
+  createFolder: vi.fn(),
+  getFolderById: vi.fn(),
+  deleteFolderById: vi.fn(),
+  updateFolder: vi.fn(),
+  ...opts,
+}) as FolderResourceRepository;
 
 
 export const mockedi18Next = {
@@ -61,6 +73,15 @@ export const mockNoteResource = (opts?: Partial<NoteResourceRepository>) => ({
   updateNote: vi.fn(),
   ...opts,
 }) as NoteResourceRepository;
+
+export const mockFolderResource = (opts?: Partial<FolderResourceRepository>) => ({
+  getAllFolder: vi.fn(),
+  createFolder: vi.fn(),
+  getFolderById: vi.fn(),
+  deleteFolderById: vi.fn(),
+  updateFolder: vi.fn(),
+  ...opts,
+}) as FolderResourceRepository;
 
 
 export const mockUserResource = (opts?: Partial<UserResourceRepository>): UserResourceRepository => ({
