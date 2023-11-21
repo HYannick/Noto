@@ -40,7 +40,7 @@ export const NoteResource = (storage: LocalForage): NoteResourceRepository => {
   const updateNote = async (noteId: string, noteToUpdate: Note): Promise<Note> => {
     const notes = await getAllNotes();
     const noteToUpdateIndex = notes.findIndex(note => note.id === noteId);
-    notes[noteToUpdateIndex] = noteToUpdate;
+    notes[noteToUpdateIndex] = {...noteToUpdate, categories: noteToUpdate.categories || []};
     await storage.setItem('notes', notes);
     return noteToUpdate;
   }
