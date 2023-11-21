@@ -8,15 +8,18 @@ import {UserStoreState} from '@/primary/stores/user.store.ts';
 import {IContainer} from '@/domain/IContainer.ts';
 import {NoteStoreState} from '@/primary/stores/note.store.ts';
 import {CategoryResourceRepository} from '@/secondary/category/CategoryResource.ts';
-import {ICategoryService} from '@/primary/Category/CategoryService.ts';
+import {ICategoryService} from '@/primary/category/CategoryService.ts';
 
 export const mockAppStore = (opts?: Partial<AppStoreState>): AppStoreState => ({
   sidebarOpen: false,
   createEditNoteOpen: false,
+  categoryModalOpen: false,
   openSidebar: vi.fn(),
   closeSidebar: vi.fn(),
   openNoteEdit: vi.fn(),
   closeNoteEdit: vi.fn(),
+  openCategoryModal: vi.fn(),
+  closeCategoryModal: vi.fn(),
   ...opts
 });
 

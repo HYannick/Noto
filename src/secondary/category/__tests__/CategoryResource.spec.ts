@@ -1,6 +1,6 @@
 import {expect, describe, vi, it, beforeEach} from 'vitest';
 import {CategoryResource} from '../CategoryResource.ts';
-import {mockCategory, mockCategoryToCreate} from '@tests/fixtures/Categorys.mocks.ts';
+import {mockCategory, mockCategoryToCreate} from '@tests/fixtures/categories.mocks.ts';
 
 let mockedDB: any;
 

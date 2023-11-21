@@ -14,7 +14,8 @@ const toNote = (noteToCreate: NoteToCreate) => ({
   date: new Date(),
   isFavourite: false,
   title: noteToCreate.title,
-  text: noteToCreate.text
+  text: noteToCreate.text,
+  categories: noteToCreate.categories,
 })
 
 export const NoteResource = (storage: LocalForage): NoteResourceRepository => {

@@ -1,9 +1,9 @@
 import { expect, describe, vi, it } from 'vitest';
-import {CategoryService} from '@/primary/Category/CategoryService.ts';
-import {mockCategory, mockCategoryToCreate} from '@tests/fixtures/Categorys.mocks.ts';
+import {CategoryService} from '@/primary/category/CategoryService.ts';
+import {mockCategory, mockCategoryToCreate} from '@tests/fixtures/categories.mocks.ts';
 import {mockCategoryResource} from '@tests/fixtures/common.mocks.ts';
 
-const CategoryResource = mockCategoryResource({
+const categoryResource = mockCategoryResource({
   getAllCategories: vi.fn().mockResolvedValue([mockCategory()]),
   createCategory: vi.fn().mockResolvedValue(mockCategory()),
   getCategoryById: vi.fn().mockResolvedValue(mockCategory({id: 'inokuni'})),
@@ -11,29 +11,29 @@ const CategoryResource = mockCategoryResource({
 })
 describe('CategoryService', () => {
   it('should get all Categorys', async () => {
-    const CategoryService = CategoryService(CategoryResource);
-    const Categorys = await CategoryService.getAllCategories();
-    expect(CategoryResource.getAllCategories).toHaveBeenCalled()
-    expect(Categorys).toEqual([mockCategory()])
+    const categoryService = CategoryService(categoryResource);
+    const categories = await categoryService.getAllCategories();
+    expect(categoryResource.getAllCategories).toHaveBeenCalled()
+    expect(categories).toEqual([mockCategory()])
   });
   it('should create a Category', async () => {
-    const CategoryService = CategoryService(CategoryResource);
+    const categoryService = CategoryService(categoryResource);
 
-    const Category = await CategoryService.createCategory(mockCategoryToCreate());
-    expect(CategoryResource.createCategory).toHaveBeenCalledWith(mockCategoryToCreate());
-    expect(Category).toEqual(mockCategory())
+    const category = await categoryService.createCategory(mockCategoryToCreate());
+    expect(categoryResource.createCategory).toHaveBeenCalledWith(mockCategoryToCreate());
+    expect(category).toEqual(mockCategory())
   });
   it('should get a Category by id', async () => {
-    const CategoryService = CategoryService(CategoryResource);
+    const categoryService = CategoryService(categoryResource);
 
-    const Category = await CategoryService.getCategoryById('inokuni');
-    expect(CategoryResource.getCategoryById).toHaveBeenCalledWith('inokuni');
-    expect(Category).toEqual(mockCategory({id: 'inokuni'}))
+    const category = await categoryService.getCategoryById('inokuni');
+    expect(categoryResource.getCategoryById).toHaveBeenCalledWith('inokuni');
+    expect(category).toEqual(mockCategory({id: 'inokuni'}))
   });
 
   it('should remove a Category by id', async () => {
-    const CategoryService = CategoryService(CategoryResource);
-    await CategoryService.deleteCategoryById('inokuni');
-    expect(CategoryResource.deleteCategoryById).toHaveBeenCalledWith('inokuni');
+    const categoryService = CategoryService(categoryResource);
+    await categoryService.deleteCategoryById('inokuni');
+    expect(categoryResource.deleteCategoryById).toHaveBeenCalledWith('inokuni');
   });
 });

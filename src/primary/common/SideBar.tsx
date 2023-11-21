@@ -11,7 +11,6 @@ import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import {FormEvent, useEffect, useRef, useState} from 'react';
 import {useInject} from '@/domain/hooks/UseInject.ts';
-import {IUserService} from '@/primary/user/UserService.ts';
 import {useUserStore} from '@/primary/stores/user.store.ts';
 import ImageUploader from './ImageUploader.tsx';
 import {ImageBlob} from '@/domain/ImageBlob.ts';

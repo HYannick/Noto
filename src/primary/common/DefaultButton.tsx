@@ -28,9 +28,9 @@ export const IconContainer = styled.span`
 `
 
 export const ButtonComp = styled.button`
-  min-width: ${(props: { variant: string }) => props.variant === 'small' ? '10rem' : '15rem'};
-  width: ${(props: { fullWidth: boolean }) => props.fullWidth ? '100%' : 'auto'};
-  height: ${(props: { variant: string }) => props.variant === 'small' ? '3rem' : '4.5rem'};
+  min-width: ${(props: { variant: string, fullWidth: boolean }) => props.variant === 'small' ? '10rem' : '15rem'};
+  width: ${(props) => props.fullWidth ? '100%' : 'auto'};
+  height: ${(props) => props.variant === 'small' ? '3rem' : '4.5rem'};
   position: relative;
   z-index: 1;
   border-radius: 0.5rem;
@@ -65,7 +65,7 @@ export const ButtonComp = styled.button`
 
   }
 `
-export default function DefaultButton({dataTestId, fullWidth, onPress, icon, type = 'submit', color = 'dark', variant = 'default', label}: ButtonProps) {
+export default function DefaultButton({dataTestId, fullWidth = false, onPress, icon, type = 'submit', color = 'dark', variant = 'default', label}: ButtonProps) {
   return (
     <ButtonComp fullWidth={fullWidth} data-testid={dataTestId} onClick={onPress} variant={variant} type={type}>
       <span className="icon-button-backdrop">
