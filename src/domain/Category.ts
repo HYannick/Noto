@@ -1,11 +1,11 @@
 import {Note} from '@/domain/Note.ts';
 
-export interface Folder {
+export interface Category {
   id: string;
   name: string;
   notes: Note[];
 }
-export interface FolderToCreate {
+export interface CategoryToCreate {
   name: string;
   notes: Note[];
 }

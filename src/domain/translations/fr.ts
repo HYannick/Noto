@@ -8,7 +8,7 @@ export default {
       all: 'Notes',
       important: 'Important',
       favourite: 'Favoris',
-      folders: 'Dossiers',
+      Categorys: 'Dossiers',
     },
     buttons: {
       create: 'Créer',
@@ -21,7 +21,8 @@ export default {
       },
       actions: {
         save: 'Sauvegarder la note',
-        delete: 'Supprimer la note'
+        delete: 'Supprimer la note',
+        moveTo: 'Déplacer vers'
       }
     },
     options: {

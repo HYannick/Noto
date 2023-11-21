@@ -5,6 +5,7 @@ export interface Note {
   date: Date;
   text: string;
   isFavourite: boolean;
+  categories: string[];
 }
 
 export interface NoteToCreate {

@@ -1,15 +1,15 @@
-import {Folder, FolderToCreate} from '@/domain/Folder.ts';
+import {Category, CategoryToCreate} from '@/domain/Category.ts';
 import {mockNote} from './notes.mocks';
 
-export const mockFolder = (opts?: Partial<Folder>): Folder => ({
-  id: 'vapor-folder',
+export const mockCategory = (opts?: Partial<Category>): Category => ({
+  id: 'vapor-Category',
   name: 'Vaporwave',
   notes: [mockNote()],
   ...opts,
 })
 
-export const mockFolderToCreate = (opts?: Partial<FolderToCreate>): FolderToCreate => ({
-  name: 'New Vaporwave Folder',
+export const mockCategoryToCreate = (opts?: Partial<CategoryToCreate>): CategoryToCreate => ({
+  name: 'New Vaporwave Category',
   notes: [mockNote()],
   ...opts,
 })

@@ -30,7 +30,7 @@ export const NoteSection = styled.div`
 `
 
 export default function NoteList({loading, error, notes}: any) {
-  const noteService = useInject('noteService') as INoteService
+  const noteService = useInject('noteService');
   const {setCurrentNote} = useNoteStore((state) => state);
   const {openNoteEdit} = useAppStore((state) => state);
 

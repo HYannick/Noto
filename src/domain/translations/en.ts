@@ -8,7 +8,7 @@ export default {
       all: 'All notes',
       important: 'Important',
       favourite: 'Favourites',
-      folders: 'Folders',
+      Categorys: 'Categorys',
     },
     buttons: {
       create: 'Create',
@@ -21,7 +21,8 @@ export default {
       },
       actions: {
         save: 'Save note',
-        delete: 'Delete note'
+        delete: 'Delete note',
+        moveTo: 'Move to'
       }
     },
     options: {

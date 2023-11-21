@@ -8,7 +8,7 @@ export default {
       all: 'Alle Notizen',
       important: 'Wichtig',
       favourite: 'Favoriten',
-      folders: 'Ordner',
+      Categorys: 'Ordner',
     },
     buttons: {
       create: 'Erstellen',
@@ -22,6 +22,7 @@ export default {
       actions: {
         save: 'Speichern notizen',
         delete: 'Löschen notizen',
+        moveTo: 'Ziehen um'
       }
     },
     options: {

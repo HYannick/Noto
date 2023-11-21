@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import getIcon, {IconName} from '@/assets/svg/icons';
 
-type ButtonVariant = 'default' | 'small';
+type ButtonVariant = 'default' | 'small' | 'transparent';
 type ButtonProps = {
   onPress?: () => any;
   icon?: IconName;
+  fullWidth?: boolean;
   label: string;
   color?: string;
   variant?: ButtonVariant;
@@ -28,6 +29,7 @@ export const IconContainer = styled.span`
 
 export const ButtonComp = styled.button`
   min-width: ${(props: { variant: string }) => props.variant === 'small' ? '10rem' : '15rem'};
+  width: ${(props: { fullWidth: boolean }) => props.fullWidth ? '100%' : 'auto'};
   height: ${(props: { variant: string }) => props.variant === 'small' ? '3rem' : '4.5rem'};
   position: relative;
   z-index: 1;
@@ -63,9 +65,9 @@ export const ButtonComp = styled.button`
 
   }
 `
-export default function DefaultButton({dataTestId, onPress, icon, type = 'submit', color = 'dark', variant = 'default', label}: ButtonProps) {
+export default function DefaultButton({dataTestId, fullWidth, onPress, icon, type = 'submit', color = 'dark', variant = 'default', label}: ButtonProps) {
   return (
-    <ButtonComp data-testid={dataTestId} onClick={onPress} variant={variant} type={type}>
+    <ButtonComp fullWidth={fullWidth} data-testid={dataTestId} onClick={onPress} variant={variant} type={type}>
       <span className="icon-button-backdrop">
         {icon && (<IconContainer color={color}>
           {getIcon(icon)}

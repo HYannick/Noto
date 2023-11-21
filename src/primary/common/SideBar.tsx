@@ -9,27 +9,27 @@ import {IconName} from '@assets/svg/icons';
 import * as localforage from 'localforage';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
-import {FormEvent, useEffect, useState} from 'react';
+import {FormEvent, useEffect, useRef, useState} from 'react';
 import {useInject} from '@/domain/hooks/UseInject.ts';
 import {IUserService} from '@/primary/user/UserService.ts';
 import {useUserStore} from '@/primary/stores/user.store.ts';
 import ImageUploader from './ImageUploader.tsx';
 import {ImageBlob} from '@/domain/ImageBlob.ts';
+import gsap from 'gsap';
 
 export const SideBarContainer = styled.div`
   position: fixed;
-  z-index: 10;
+  z-index: 20;
   right: 0;
   bottom: 0;
   top: 0;
-  transform: translateX(${(props: { isOpen: boolean }) => props.isOpen ? '0' : '80vw'});
+  transform: translateX(80vw);
   background: var(--color-light);
   width: 80vw;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 1.5rem;
-  transition: transform .3s cubic-bezier(0, 0.55, 0.45, 1) .15s;
 
   .app-settings {
     display: flex;
@@ -90,24 +90,23 @@ export const AppUserInfos = styled.div`
   }
 `
 
-export const SidebarOverlay = styled.div`
+export const Overlay = styled.div`
   position: fixed;
-  z-index: 9;
+  z-index: 10;
   background: var(--color-light);
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  opacity: ${(props: { isOpen: boolean }) => props.isOpen ? '0.8' : '0'};
-  visibility: ${(props: { isOpen: boolean }) => props.isOpen ? 'visible' : 'hidden'};
+  opacity: 0;
+  visibility: visible;
   transition: opacity 0.3s, visibility 0.3s;
 `
 
 export default function SideBar() {
   const closeSidebar = useAppStore((state) => state.closeSidebar)
-  const sidebarOpen = useAppStore((state) => state.sidebarOpen)
   const setNotes = useNoteStore((state) => state.setNotes)
-  const userService = useInject('userService') as IUserService;
+  const userService = useInject('userService');
   const {username: defaultUsername, avatar: defaultAvatar, setUserInfos} = useUserStore((state) => state);
   const {t} = useTranslation();
   const {switchTheme, themeIcon} = useTheme();
@@ -118,6 +117,43 @@ export default function SideBar() {
     setUsername(defaultUsername);
     setAvatar(defaultAvatar);
   }, [defaultAvatar, defaultUsername]);
+  const componentRef = useRef(null);
+  const overlayRef = useRef(null);
+  const beforeClose = () => {
+    const tl= gsap.timeline({
+      onComplete: closeSidebar,
+    });
+    tl
+      .to(overlayRef.current, {
+        duration: 0.3,
+        autoAlpha: 0,
+        ease: 'expo.out',
+      }, '-=0.3')
+      .to(componentRef.current, {
+        duration: 0.5,
+        autoAlpha: 1,
+        x: '80vw',
+        ease: 'expo.out',
+      })
+
+  }
+  useEffect(() => {
+    const tl= gsap.timeline();
+    tl
+      .to(overlayRef.current, {
+        duration: 0.3,
+        autoAlpha: 0.8,
+        ease: 'expo.out',
+      }, '-=0.3')
+      .to(componentRef.current, {
+        duration: 0.5,
+        autoAlpha: 1,
+        x: 0,
+        ease: 'expo.out',
+      })
+  }, []);
+
+
 
   const updateUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -141,12 +177,12 @@ export default function SideBar() {
 
   return (
     <>
-      <SideBarContainer isOpen={sidebarOpen}>
+      <SideBarContainer ref={componentRef}>
         <div className="sidebar-header">
           <div className="sidebar-title">
             N<span>ō</span>to
           </div>
-          <IconButton icon="close" onPress={closeSidebar} dataTestId="close-sidebar-button"/>
+          <IconButton icon="close" onPress={beforeClose} dataTestId="close-sidebar-button"/>
           <IconButton icon="trash" onPress={clearData} dataTestId="clear-data-button"/>
         </div>
         <div className="sidebar-menu">
@@ -177,7 +213,7 @@ export default function SideBar() {
 
         </div>
       </SideBarContainer>
-      <SidebarOverlay isOpen={sidebarOpen} onClick={closeSidebar}/>
+      <Overlay ref={overlayRef} onClick={beforeClose}/>
     </>
   )
 }

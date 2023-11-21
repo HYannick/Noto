@@ -7,8 +7,8 @@ import {AppStoreState} from '@/primary/stores/app.store.ts';
 import {UserStoreState} from '@/primary/stores/user.store.ts';
 import {IContainer} from '@/domain/IContainer.ts';
 import {NoteStoreState} from '@/primary/stores/note.store.ts';
-import {FolderResourceRepository} from '@/secondary/folder/FolderResource.ts';
-import {IFolderService} from '@/primary/folder/FolderService.ts';
+import {CategoryResourceRepository} from '@/secondary/category/CategoryResource.ts';
+import {ICategoryService} from '@/primary/Category/CategoryService.ts';
 
 export const mockAppStore = (opts?: Partial<AppStoreState>): AppStoreState => ({
   sidebarOpen: false,
@@ -51,14 +51,14 @@ export const mockNoteService = (opts?: Partial<INoteService>) => ({
   ...opts,
 }) as INoteService;
 
-export const mockFolderService = (opts?: Partial<IFolderService>) => ({
-  getAllFolder: vi.fn(),
-  createFolder: vi.fn(),
-  getFolderById: vi.fn(),
-  deleteFolderById: vi.fn(),
-  updateFolder: vi.fn(),
+export const mockCategoryService = (opts?: Partial<ICategoryService>) => ({
+  getAllCategory: vi.fn(),
+  createCategory: vi.fn(),
+  getCategoryById: vi.fn(),
+  deleteCategoryById: vi.fn(),
+  updateCategory: vi.fn(),
   ...opts,
-}) as FolderResourceRepository;
+}) as CategoryResourceRepository;
 
 
 export const mockedi18Next = {
@@ -74,14 +74,14 @@ export const mockNoteResource = (opts?: Partial<NoteResourceRepository>) => ({
   ...opts,
 }) as NoteResourceRepository;
 
-export const mockFolderResource = (opts?: Partial<FolderResourceRepository>) => ({
-  getAllFolder: vi.fn(),
-  createFolder: vi.fn(),
-  getFolderById: vi.fn(),
-  deleteFolderById: vi.fn(),
-  updateFolder: vi.fn(),
+export const mockCategoryResource = (opts?: Partial<CategoryResourceRepository>) => ({
+  getAllCategory: vi.fn(),
+  createCategory: vi.fn(),
+  getCategoryById: vi.fn(),
+  deleteCategoryById: vi.fn(),
+  updateCategory: vi.fn(),
   ...opts,
-}) as FolderResourceRepository;
+}) as CategoryResourceRepository;
 
 
 export const mockUserResource = (opts?: Partial<UserResourceRepository>): UserResourceRepository => ({

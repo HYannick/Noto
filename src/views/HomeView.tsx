@@ -7,13 +7,12 @@ import IconButton from '@/primary/common/IconButton.tsx';
 import styled from '@emotion/styled';
 import {Note} from '@/domain/Note.ts';
 import {useInject} from '@/domain/hooks/UseInject.ts';
-import {INoteService} from '@/primary/note/NoteService.ts';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import {useSearchStore} from '@/primary/stores/search.store.ts';
-import {IUserService} from '@/primary/user/UserService.ts';
 import {useUserStore} from '@/primary/stores/user.store.ts';
 import SideBar from '@/primary/common/SideBar.tsx';
+import CategoryModal from '@/primary/category/CategoryModal.tsx';
 
 export const IconAddButton = styled.div`
   position: fixed;
@@ -27,9 +26,9 @@ export default function HomeView() {
   const searchQuery = useSearchStore((state) => state.searchQuery);
   const setNotes = useNoteStore(state => state.setNotes)
   const notes = useNoteStore(state => state.noteList)
-  const openNoteEdit = useAppStore(state => state.openNoteEdit)
-  const noteService = useInject('noteService') as INoteService
-  const userService = useInject('userService') as IUserService
+  const {categoryModalOpen,openNoteEdit, createEditNoteOpen, sidebarOpen} = useAppStore(state => state)
+  const noteService = useInject('noteService');
+  const userService = useInject('userService');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
@@ -77,12 +76,13 @@ export default function HomeView() {
     <>
       <Header/>
       <Search/>
-      <SideBar/>
+      {sidebarOpen && <SideBar/>}
       <NoteList loading={loading} error={error} notes={filteredNotes}/>
       <IconAddButton>
         <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light"/>
       </IconAddButton>
-      <CreateEditNote onNoteUpdate={fetchNotes}/>
+      {createEditNoteOpen && <CreateEditNote onNoteUpdate={fetchNotes}/>}
+      {categoryModalOpen && <CategoryModal />}
     </>
   )
 }

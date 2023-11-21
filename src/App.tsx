@@ -11,20 +11,20 @@ import localforage from 'localforage';
 import {changeLanguage} from 'i18next';
 import {UserService} from './primary/user/UserService.ts';
 import {UserResource} from './secondary/user/UserResource.ts';
-import {FolderService} from '@/primary/folder/FolderService.ts';
-import {FolderResource} from '@/secondary/folder/FolderResource.ts';
+import {CategoryService} from '@/primary/category/CategoryService.ts';
+import {CategoryResource} from '@/secondary/category/CategoryResource.ts';
 
 const storage = initDB();
 
 const noteResource = NoteResource(storage);
 const userResource = UserResource(storage);
-const folderResource = FolderResource(storage);
+const categoryResource = CategoryResource(storage);
 
 const container: IContainer = {
   registry: {
     noteService: NoteService(noteResource),
     userService: UserService(userResource),
-    folderService: FolderService(folderResource),
+    categoryService: CategoryService(categoryResource),
   },
   resolve(identifier: string) {
     if (!this.registry.hasOwnProperty(identifier)) {
