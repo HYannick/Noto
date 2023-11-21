@@ -140,7 +140,7 @@ export default function CategoryModal() {
       <CategoryModalContainer ref={containerRef}>
         <div className="category-list">
           {categories.map(category => (
-            <CategoryItem selected={currentNote!.categories.includes(category.id)} className="category-item" key={category.id} onClick={() => bindCategoryToNote(category.id)}> {category.name}</CategoryItem>
+            <CategoryItem selected={currentNote!.categories?.includes(category.id)} className="category-item" key={category.id} onClick={() => bindCategoryToNote(category.id)}> {category.name}</CategoryItem>
           ))}
         </div>
         {
