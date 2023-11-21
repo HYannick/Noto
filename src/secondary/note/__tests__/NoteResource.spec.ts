@@ -87,4 +87,30 @@ describe('NoteResource', () => {
       mockNote()
     ])
   });
+
+  it('should bind a category to a note', async () => {
+    const resource = NoteResource(mockedDB);
+
+    const note = await resource.bindCategory('dreams', 'aesthetic-note');
+    expect(mockedDB.getItem).toHaveBeenCalledWith('notes');
+    expect(mockedDB.setItem).toHaveBeenCalledWith('notes',  [
+      mockNote(),
+      mockNote({id: 'aesthetic-note', title: 'Genre is the new Aesthetic', categories: ['dreams']})
+    ])
+    expect(note.categories).toEqual(['dreams'])
+  });
+
+  it('should unbind a category to a note if exist', async () => {
+    const resource = NoteResource(mockedDB);
+
+    await resource.bindCategory('dreams', 'aesthetic-note');
+    await resource.bindCategory('memories', 'aesthetic-note');
+    const note = await resource.bindCategory('dreams', 'aesthetic-note');
+    expect(mockedDB.getItem).toHaveBeenCalledWith('notes');
+    expect(mockedDB.setItem).toHaveBeenCalledWith('notes',  [
+      mockNote(),
+      mockNote({id: 'aesthetic-note', title: 'Genre is the new Aesthetic', categories: ['memories']})
+    ])
+    expect(note.categories).toEqual(['memories'])
+  });
 });

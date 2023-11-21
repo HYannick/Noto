@@ -36,4 +36,10 @@ describe('NoteService', () => {
     await noteService.deleteNoteById('inokuni');
     expect(noteResource.deleteNoteById).toHaveBeenCalledWith('inokuni');
   });
+
+  it('should bind a category to the a note', async () => {
+    const noteService = NoteService(noteResource);
+    await noteService.bindCategory('dreams', 'inokuni');
+    expect(noteResource.bindCategory).toHaveBeenCalledWith('dreams', 'inokuni');
+  });
 });

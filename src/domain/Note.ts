@@ -11,5 +11,5 @@ export interface Note {
 export interface NoteToCreate {
   title: string;
   text: string;
-  categories: [];
+  categories?: [];
 }

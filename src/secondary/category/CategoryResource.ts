@@ -18,38 +18,38 @@ const toCategory = (CategoryToCreate: CategoryToCreate): Category => ({
 export const CategoryResource = (storage: LocalForage): CategoryResourceRepository => {
   const getAllCategories = async (): Promise<Category[]> => {
     try {
-      const Categorys = await storage.getItem('Categorys') as Category[];
-      if(!Categorys) throw Error;
-      return Categorys;
+      const categories = await storage.getItem('categories') as Category[];
+      if(!categories) throw Error;
+      return categories;
     } catch (e) {
       return []
     }
   }
 
   const createCategory = async (CategoryToCreate: CategoryToCreate): Promise<Category> => {
-    const Categorys = await getAllCategories();
+    const categories = await getAllCategories();
     const newCategory = toCategory(CategoryToCreate)
-    await storage.setItem('Categorys', [...Categorys, newCategory]);
+    await storage.setItem('categories', [...categories, newCategory]);
     return newCategory;
   }
 
   const updateCategory = async (CategoryId: string, CategoryToUpdate: Category): Promise<Category> => {
-    const Categorys = await getAllCategories();
-    const CategoryToUpdateIndex = Categorys.findIndex(Category => Category.id === CategoryId);
-    Categorys[CategoryToUpdateIndex] = CategoryToUpdate;
-    await storage.setItem('Categorys', Categorys);
+    const categories = await getAllCategories();
+    const CategoryToUpdateIndex = categories.findIndex(Category => Category.id === CategoryId);
+    categories[CategoryToUpdateIndex] = CategoryToUpdate;
+    await storage.setItem('categories', categories);
     return CategoryToUpdate;
   }
 
   const getCategoryById = async (CategoryId: string): Promise<Category> => {
-    const Categorys = await getAllCategories();
-    return Categorys.find(Category => Category.id === CategoryId)!;
+    const categories = await getAllCategories();
+    return categories.find(Category => Category.id === CategoryId)!;
   }
 
   const deleteCategoryById = async (CategoryId: string): Promise<Category[]> => {
-    const Categorys = await getAllCategories();
-    const updatedNotes = Categorys.filter(Category => Category.id !== CategoryId);
-    await storage.setItem('Categorys', updatedNotes);
+    const categories = await getAllCategories();
+    const updatedNotes = categories.filter(Category => Category.id !== CategoryId);
+    await storage.setItem('categories', updatedNotes);
     return updatedNotes;
   }
 

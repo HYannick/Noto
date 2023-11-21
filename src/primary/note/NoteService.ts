@@ -1,5 +1,5 @@
 import {NoteResourceRepository} from '@/secondary/note/NoteResource.ts';
-import {Note, NoteToCreate} from '@/domain/Note.ts';
+import {Note, NoteId, NoteToCreate} from '@/domain/Note.ts';
 
 export interface INoteService {
   getAllNotes: () => Promise<Note[]>;
@@ -7,6 +7,7 @@ export interface INoteService {
   updateNote: (noteId: string, noteToUpdate: Note) => Promise<Note>;
   getNoteById: (noteId: string) => Promise<Note>;
   deleteNoteById: (noteId: string) => Promise<void>;
+  bindCategory(categoryId: string, noteId: NoteId): Promise<Note>;
 }
 
 export const NoteService = (noteResource: NoteResourceRepository): INoteService => {
@@ -17,15 +18,19 @@ export const NoteService = (noteResource: NoteResourceRepository): INoteService 
     return await noteResource.createNote(noteToCreate);
   }
 
-  const updateNote = async (noteId: string, noteToUpdate: Note) => {
+  const updateNote = async (noteId: NoteId, noteToUpdate: Note) => {
     return await noteResource.updateNote(noteId, noteToUpdate);
   }
 
-  const getNoteById = async (noteId: string): Promise<Note> =>  {
+  const getNoteById = async (noteId: NoteId): Promise<Note> =>  {
     return await noteResource.getNoteById(noteId);
   }
-  const deleteNoteById = async (noteId: string): Promise<void> =>  {
+  const deleteNoteById = async (noteId: NoteId): Promise<void> =>  {
     await noteResource.deleteNoteById(noteId);
+  }
+
+  const bindCategory = async (categoryId: string, noteId: NoteId): Promise<Note> =>  {
+    return await noteResource.bindCategory(categoryId, noteId);
   }
 
   return {
@@ -33,6 +38,7 @@ export const NoteService = (noteResource: NoteResourceRepository): INoteService 
     getAllNotes,
     createNote,
     updateNote,
-    deleteNoteById
+    deleteNoteById,
+    bindCategory
   }
 }

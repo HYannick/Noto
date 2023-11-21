@@ -74,6 +74,7 @@ export const mockNoteResource = (opts?: Partial<NoteResourceRepository>) => ({
   getNoteById: vi.fn(),
   deleteNoteById: vi.fn(),
   updateNote: vi.fn(),
+  bindCategory: vi.fn(),
   ...opts,
 }) as NoteResourceRepository;
 

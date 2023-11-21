@@ -9,6 +9,7 @@ type IconButtonProps = {
   backgroundColor?: string;
   variant?: IconButtonVariant;
   dataTestId?: string;
+  type?: 'submit' | 'reset' | undefined;
 }
 const variantStyles = (props: { variant: string, backgroundColor: string }) => {
   if (props.variant === 'default') {
@@ -74,9 +75,9 @@ export const IconButtonContent = styled.div`
   border: none;
   ${(props: { variant: string, backgroundColor: string }) => variantStyles(props)}
 `
-export default function IconButton({dataTestId, onPress, icon, color = 'dark',backgroundColor= 'light', variant = 'default'}: IconButtonProps) {
+export default function IconButton({dataTestId, onPress, icon, color = 'dark',backgroundColor= 'light', variant = 'default', type}: IconButtonProps) {
   return (
-    <IconButtonComp data-testid={dataTestId} onClick={onPress} variant={variant}>
+    <IconButtonComp data-testid={dataTestId} onClick={onPress} variant={variant} type={type}>
       <IconButtonContent className="icon-button-backdrop" variant={variant} backgroundColor={backgroundColor}>
          <IconContainer color={color}>
           {getIcon(icon)}

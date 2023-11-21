@@ -8,7 +8,7 @@ export default {
       all: 'Alle Notizen',
       important: 'Wichtig',
       favourite: 'Favoriten',
-      Categorys: 'Ordner',
+      categories: 'Ordner',
     },
     buttons: {
       create: 'Erstellen',

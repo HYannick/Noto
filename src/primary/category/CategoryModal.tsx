@@ -8,6 +8,7 @@ import InputField from '@/primary/common/InputField.tsx';
 import IconButton from '@/primary/common/IconButton.tsx';
 import DefaultButton from '@/primary/common/DefaultButton.tsx';
 import {useAppStore} from '@/primary/stores/app.store.ts';
+import {useNoteStore} from '@/primary/stores/note.store.ts';
 
 export const CategoryModalContainer = styled.div`
   width: 100%;
@@ -17,22 +18,34 @@ export const CategoryModalContainer = styled.div`
   padding: 1.5rem;
   bottom: 0;
   left: 0;
+  transform: translateX(100vw);
   z-index: 20;
-  transition: transform .3s cubic-bezier(0, 0.55, 0.45, 1);
   .category-list {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 2rem;
   }
-  .category {
-    display: flex;
-    padding: 1.5rem;
-    font-weight: bold;
-    font-size: 1.5rem;
-    border: 0.1rem solid var(--color-primary);
-    border-radius: 1rem;
+`
+
+export const CategoryItem = styled.div`
+  display: flex;
+  padding: 2rem;
+  font-weight: 900;
+  font-size: 1.5rem;
+  border: 0.2rem solid var(--color-dark);
+  background: var(--color-background);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all .3s ease;
+  &:hover {
+    background: var(--color-dark);
+    color: var(--color-light);
   }
+  ${(props: { selected: boolean }) => props.selected && `
+    background: var(--color-primary);
+    color: var(--color-light);
+  `}
 `
 
 export const CategoryForm = styled.form`
@@ -44,6 +57,8 @@ export const CategoryForm = styled.form`
 `
 export default function CategoryModal() {
   const {closeCategoryModal}= useAppStore();
+  const {currentNote, setCurrentNote} = useNoteStore();
+  const noteService = useInject('noteService')
   const overlayRef = useRef(null);
   const containerRef = useRef(null);
   const categoryService = useInject('categoryService');
@@ -59,7 +74,7 @@ export default function CategoryModal() {
       .to(containerRef.current, {
         duration: 0.5,
         autoAlpha: 1,
-        y: 0,
+        x: 0,
         ease: 'expo.out',
       })
   }
@@ -81,7 +96,7 @@ export default function CategoryModal() {
       .to(containerRef.current, {
         duration: 0.5,
         autoAlpha: 1,
-        y: '100vh',
+        x: '100vw',
         ease: 'expo.out',
       })
 
@@ -109,20 +124,30 @@ export default function CategoryModal() {
     toggleForm(false);
     setCategoryName('');
   }
+
+  const bindCategoryToNote = async (categoryId: string) => {
+    if(!currentNote) return;
+    const note = await noteService.bindCategory(categoryId, currentNote.id);
+    setCurrentNote(note);
+  }
+
+  useEffect(() => {
+    console.log(currentNote)
+  }, [currentNote]);
+
   return (
     <>
       <CategoryModalContainer ref={containerRef}>
         <div className="category-list">
           {categories.map(category => (
-            <DefaultButton label= {category.name} key={category.id} />
+            <CategoryItem selected={currentNote!.categories.includes(category.id)} className="category-item" key={category.id} onClick={() => bindCategoryToNote(category.id)}> {category.name}</CategoryItem>
           ))}
         </div>
         {
           formOpen && (
             <CategoryForm onSubmit={saveForm}>
-              <IconButton icon="close" />
+              <IconButton icon="close" type="reset" onPress={resetForm} />
               <div className="formInput">
-
                 <InputField value={categoryName} placeholder="Label" type="text" onInput={(e) => setCategoryName(e.target.value)}/>
               </div>
               <IconButton icon="save"/>

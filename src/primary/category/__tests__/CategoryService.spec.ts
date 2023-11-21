@@ -10,7 +10,7 @@ const categoryResource = mockCategoryResource({
   deleteCategoryById: vi.fn().mockResolvedValue([mockCategory({id: 'inokuni'})])
 })
 describe('CategoryService', () => {
-  it('should get all Categorys', async () => {
+  it('should get all categories', async () => {
     const categoryService = CategoryService(categoryResource);
     const categories = await categoryService.getAllCategories();
     expect(categoryResource.getAllCategories).toHaveBeenCalled()

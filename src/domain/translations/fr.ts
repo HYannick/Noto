@@ -8,7 +8,7 @@ export default {
       all: 'Notes',
       important: 'Important',
       favourite: 'Favoris',
-      Categorys: 'Dossiers',
+      categories: 'Dossiers',
     },
     buttons: {
       create: 'Créer',

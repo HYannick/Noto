@@ -1,12 +1,13 @@
-import {Note, NoteToCreate} from '@/domain/Note.ts';
+import {Note, NoteId, NoteToCreate} from '@/domain/Note.ts';
 import {v4 as uuidv4} from 'uuid';
 
 export interface NoteResourceRepository {
   getAllNotes: () => Promise<Note[]>;
   createNote: (noteToCreate: NoteToCreate) => Promise<Note>;
-  updateNote: (noteId: string, noteToUpdate: Note) => Promise<Note>;
-  getNoteById: (noteId: string) => Promise<Note>;
-  deleteNoteById: (noteId: string) => Promise<Note[]>;
+  updateNote: (noteId: NoteId, noteToUpdate: Note) => Promise<Note>;
+  getNoteById: (noteId: NoteId) => Promise<Note>;
+  deleteNoteById: (noteId: NoteId) => Promise<Note[]>;
+  bindCategory: (categoryId: string, noteId: NoteId) => Promise<Note>;
 }
 
 const toNote = (noteToCreate: NoteToCreate) => ({
@@ -15,7 +16,7 @@ const toNote = (noteToCreate: NoteToCreate) => ({
   isFavourite: false,
   title: noteToCreate.title,
   text: noteToCreate.text,
-  categories: noteToCreate.categories,
+  categories: noteToCreate.categories || [],
 })
 
 export const NoteResource = (storage: LocalForage): NoteResourceRepository => {
@@ -56,12 +57,24 @@ export const NoteResource = (storage: LocalForage): NoteResourceRepository => {
     return updatedNotes;
   }
 
+  const bindCategory = async (categoryId: string, noteId: string): Promise<Note> => {
+    const note = await getNoteById(noteId);
+    let categories = note.categories;
+    if (categories.includes(categoryId)) {
+      categories = note.categories.filter(category => category !== categoryId);
+    } else {
+      categories = [...note.categories, categoryId];
+    }
+    return await updateNote(noteId, {...note, categories})
+  }
+
 
   return {
     getAllNotes,
     createNote,
     updateNote,
     getNoteById,
-    deleteNoteById
+    deleteNoteById,
+    bindCategory
   }
 }

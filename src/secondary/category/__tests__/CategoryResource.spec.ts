@@ -18,22 +18,22 @@ describe('CategoryResource', () => {
       setItem: vi.fn().mockResolvedValue('OK')
     }
   })
-  it('should get Categorys', async () => {
+  it('should get categories', async () => {
     const resource = CategoryResource(mockedDB);
-    const Categorys = await resource.getAllCategories();
-    expect(mockedDB.getItem).toHaveBeenCalledWith('Categorys')
-    expect(Categorys).toEqual([
+    const categories = await resource.getAllCategories();
+    expect(mockedDB.getItem).toHaveBeenCalledWith('categories')
+    expect(categories).toEqual([
       mockCategory(),
       mockCategory({id: 'aesthetic-Category', name: 'New Aesthetic Category', notes: []})
     ])
   });
 
-  it('should return empty array if no Categorys', async () => {
+  it('should return empty array if no categories', async () => {
     mockedDB.getItem = vi.fn().mockResolvedValue(null)
     const resource = CategoryResource(mockedDB);
-    const Categorys = await resource.getAllCategories();
-    expect(mockedDB.getItem).toHaveBeenCalledWith('Categorys')
-    expect(Categorys).toEqual([])
+    const categories = await resource.getAllCategories();
+    expect(mockedDB.getItem).toHaveBeenCalledWith('categories')
+    expect(categories).toEqual([])
   });
 
   it('should create a Category', async () => {
@@ -41,8 +41,8 @@ describe('CategoryResource', () => {
     const CategoryToCreate = mockCategoryToCreate();
 
     await resource.createCategory(CategoryToCreate);
-    expect(mockedDB.getItem).toHaveBeenCalledWith('Categorys')
-    expect(mockedDB.setItem).toHaveBeenCalledWith('Categorys', [
+    expect(mockedDB.getItem).toHaveBeenCalledWith('categories')
+    expect(mockedDB.setItem).toHaveBeenCalledWith('categories', [
       mockCategory(),
       mockCategory({id: 'aesthetic-Category', name: 'New Aesthetic Category', notes: []}),
       {
@@ -57,8 +57,8 @@ describe('CategoryResource', () => {
     const CategoryToUpdate = mockCategory({id: 'aesthetic-Category', name: 'updated Category'});
 
     await resource.updateCategory('aesthetic-Category', CategoryToUpdate);
-    expect(mockedDB.getItem).toHaveBeenCalledWith('Categorys')
-    expect(mockedDB.setItem).toHaveBeenCalledWith('Categorys', [
+    expect(mockedDB.getItem).toHaveBeenCalledWith('categories')
+    expect(mockedDB.setItem).toHaveBeenCalledWith('categories', [
       mockCategory(),
       mockCategory({id: 'aesthetic-Category', name: 'updated Category'}),
     ])
@@ -68,16 +68,16 @@ describe('CategoryResource', () => {
     const resource = CategoryResource(mockedDB);
 
     const Category = await resource.getCategoryById('aesthetic-Category');
-    expect(mockedDB.getItem).toHaveBeenCalledWith('Categorys');
+    expect(mockedDB.getItem).toHaveBeenCalledWith('categories');
     expect(Category).toEqual(mockCategory({id: 'aesthetic-Category', name: 'New Aesthetic Category', notes: []}))
   });
 
   it('should delete a Category', async () => {
     const resource = CategoryResource(mockedDB);
 
-    const Categorys = await resource.deleteCategoryById('aesthetic-Category');
-    expect(mockedDB.getItem).toHaveBeenCalledWith('Categorys');
-    expect(Categorys).toEqual([
+    const categories = await resource.deleteCategoryById('aesthetic-Category');
+    expect(mockedDB.getItem).toHaveBeenCalledWith('categories');
+    expect(categories).toEqual([
       mockCategory()
     ])
   });
