@@ -25,6 +25,11 @@ export default {
         moveTo: 'Ziehen um'
       }
     },
+    categories: {
+      add: 'Neue Kategorie',
+      label: 'Kategoriename',
+      title: 'Kategorien',
+    },
     options: {
       userInfos: {
         title: 'Informationen',

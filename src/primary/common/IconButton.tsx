@@ -7,16 +7,17 @@ type IconButtonProps = {
   icon: IconName;
   color?: string;
   backgroundColor?: string;
+  shadowColor?: string;
   variant?: IconButtonVariant;
   dataTestId?: string;
   type?: 'submit' | 'reset' | undefined;
 }
-const variantStyles = (props: { variant: string, backgroundColor: string }) => {
+const variantStyles = (props: { variant: string, backgroundColor: string, shadowColor: string }) => {
   if (props.variant === 'default') {
     return (
       `
         background: var(--color-${props.backgroundColor});
-        box-shadow: inset 0 0 0 0.1rem var(--color-dark);
+        box-shadow: inset 0 0 0 0.1rem var(--color-${props.shadowColor});
         transform: translateY(-0.6rem);
       `
     )
@@ -52,7 +53,7 @@ export const IconButtonComp = styled.button`
   z-index: 1;
   border-radius: 0.5rem;
   border: none;
-  background: ${(props: { variant: string }) => props.variant === 'borderless' ? 'transparent' : 'var(--color-dark)'};
+  background: ${(props: { variant: string, shadowColor: string }) => props.variant === 'borderless' ? 'transparent' : `var(--color-${props.shadowColor})`};
   cursor: pointer;
   &:active {
     .icon-button-backdrop {
@@ -73,12 +74,12 @@ export const IconButtonContent = styled.div`
   z-index: -1;
   border-radius: 0.5rem;
   border: none;
-  ${(props: { variant: string, backgroundColor: string }) => variantStyles(props)}
+  ${(props: { variant: string, backgroundColor: string, shadowColor: string }) => variantStyles(props)}
 `
-export default function IconButton({dataTestId, onPress, icon, color = 'dark',backgroundColor= 'light', variant = 'default', type}: IconButtonProps) {
+export default function IconButton({dataTestId, onPress, icon, color = 'dark',backgroundColor= 'light', shadowColor ='dark', variant = 'default', type}: IconButtonProps) {
   return (
-    <IconButtonComp data-testid={dataTestId} onClick={onPress} variant={variant} type={type}>
-      <IconButtonContent className="icon-button-backdrop" variant={variant} backgroundColor={backgroundColor}>
+    <IconButtonComp data-testid={dataTestId} onClick={onPress} variant={variant} type={type} shadowColor={shadowColor}>
+      <IconButtonContent className="icon-button-backdrop" variant={variant} backgroundColor={backgroundColor} shadowColor={shadowColor}>
          <IconContainer color={color}>
           {getIcon(icon)}
         </IconContainer>

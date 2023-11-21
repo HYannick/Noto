@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import IconButton from '@/primary/common/IconButton.tsx';
-import DefaultButton from '@/primary/common/DefaultButton.tsx';
 import {ChangeEvent, FormEvent, useEffect, useRef, useState} from 'react';
 import InputField from '@/primary/common/InputField.tsx';
 import {useTranslation} from 'react-i18next';
@@ -214,7 +213,7 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
       </div>
       <div className="create-note-footer">
         <div ref={saveButtonRef} className="save-button">
-          <DefaultButton dataTestId="save-button" type="submit" icon="save" label={t('buttons.save')}/>
+          <IconButton dataTestId="save-button" icon="save" backgroundColor="valid" color="valid-dark" shadowColor="valid-dark" />
         </div>
       </div>
     </CreateEditNoteForm>

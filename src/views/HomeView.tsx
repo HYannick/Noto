@@ -79,7 +79,7 @@ export default function HomeView() {
       {sidebarOpen && <SideBar/>}
       <NoteList loading={loading} error={error} notes={filteredNotes}/>
       <IconAddButton>
-        <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light"/>
+        <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light" shadowColor="primary-dark"/>
       </IconAddButton>
       {createEditNoteOpen && <CreateEditNote onNoteUpdate={fetchNotes}/>}
       {categoryModalOpen && <CategoryModal />}

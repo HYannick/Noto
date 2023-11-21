@@ -6,6 +6,7 @@ type ButtonProps = {
   onPress?: () => any;
   icon?: IconName;
   fullWidth?: boolean;
+  textCentered?: boolean;
   label: string;
   color?: string;
   variant?: ButtonVariant;
@@ -28,7 +29,7 @@ export const IconContainer = styled.span`
 `
 
 export const ButtonComp = styled.button`
-  min-width: ${(props: { variant: string, fullWidth: boolean }) => props.variant === 'small' ? '10rem' : '15rem'};
+  min-width: ${(props: { variant: string, fullWidth: boolean, textCentered: boolean }) => props.variant === 'small' ? '10rem' : '15rem'};
   width: ${(props) => props.fullWidth ? '100%' : 'auto'};
   height: ${(props) => props.variant === 'small' ? '3rem' : '4.5rem'};
   position: relative;
@@ -46,6 +47,7 @@ export const ButtonComp = styled.button`
   .icon-button-backdrop {
     display: flex;
     align-items: center;
+    justify-content: ${(props) => props.textCentered ? 'center' : 'flex-start'};;
     gap: 1rem;
     position: absolute;
     padding: 1.5rem;
@@ -65,9 +67,9 @@ export const ButtonComp = styled.button`
 
   }
 `
-export default function DefaultButton({dataTestId, fullWidth = false, onPress, icon, type = 'submit', color = 'dark', variant = 'default', label}: ButtonProps) {
+export default function DefaultButton({dataTestId, fullWidth = false, textCentered = false, onPress, icon, type = 'submit', color = 'dark', variant = 'default', label}: ButtonProps) {
   return (
-    <ButtonComp fullWidth={fullWidth} data-testid={dataTestId} onClick={onPress} variant={variant} type={type}>
+    <ButtonComp fullWidth={fullWidth} data-testid={dataTestId} onClick={onPress} variant={variant} type={type} textCentered={textCentered}>
       <span className="icon-button-backdrop">
         {icon && (<IconContainer color={color}>
           {getIcon(icon)}

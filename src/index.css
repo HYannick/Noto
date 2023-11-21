@@ -2,6 +2,11 @@
 
 
   --color-primary: #777CE3;
+  --color-primary-dark: #535584;
+  --color-alert: #FF6D6D;
+  --color-valid: #A8FF89;
+  --color-valid-dark: #557948;
+  --color-alert-dark: #7b3f3f;
   --color-dark: #1E1E1E;
   --color-light: #FFFFFF;
   --color-disabled: #DDDDDD;

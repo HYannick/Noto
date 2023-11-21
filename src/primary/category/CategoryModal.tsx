@@ -9,6 +9,7 @@ import IconButton from '@/primary/common/IconButton.tsx';
 import DefaultButton from '@/primary/common/DefaultButton.tsx';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
+import {useTranslation} from 'react-i18next';
 
 export const CategoryModalContainer = styled.div`
   width: 100%;
@@ -26,6 +27,17 @@ export const CategoryModalContainer = styled.div`
     gap: 1.5rem;
     margin-bottom: 2rem;
   }
+  .categories-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 0.5rem 0 1.5rem;
+    p {
+      font-size: 2rem;
+      font-weight: 900;
+      margin: 0;
+    }
+  }
 `
 
 export const CategoryItem = styled.div`
@@ -33,18 +45,19 @@ export const CategoryItem = styled.div`
   padding: 2rem;
   font-weight: 900;
   font-size: 1.5rem;
-  border: 0.2rem solid var(--color-dark);
+  box-shadow: 0 0 0 0.2rem var(--color-dark);
   background: var(--color-background);
   border-radius: 1rem;
   cursor: pointer;
-  transition: all .3s ease;
-  &:hover {
+  transition: background .05s ease;
+  &:active {
     background: var(--color-dark);
     color: var(--color-light);
   }
   ${(props: { selected: boolean }) => props.selected && `
     background: var(--color-primary);
     color: var(--color-light);
+      box-shadow: 0 0 0 0.2rem var(--color-primary-dark);
   `}
 `
 
@@ -108,6 +121,7 @@ export default function CategoryModal() {
 
   const [categoryName, setCategoryName] = useState('')
   const [formOpen, toggleForm] = useState(false);
+  const {t} = useTranslation();
   const categoryAlreadyExist = (categoryName: string) => {
     return !!categories.find(category => category.name === categoryName)
   }
@@ -138,6 +152,10 @@ export default function CategoryModal() {
   return (
     <>
       <CategoryModalContainer ref={containerRef}>
+        <div className="categories-header">
+          <IconButton icon="back" onPress={beforeClose}/>
+          <p>{t('categories.title')}</p>
+        </div>
         <div className="category-list">
           {categories.map(category => (
             <CategoryItem selected={currentNote!.categories?.includes(category.id)} className="category-item" key={category.id} onClick={() => bindCategoryToNote(category.id)}> {category.name}</CategoryItem>
@@ -146,15 +164,15 @@ export default function CategoryModal() {
         {
           formOpen && (
             <CategoryForm onSubmit={saveForm}>
-              <IconButton icon="close" type="reset" onPress={resetForm} />
               <div className="formInput">
-                <InputField value={categoryName} placeholder="Label" type="text" onInput={(e) => setCategoryName(e.target.value)}/>
+                <InputField value={categoryName} placeholder={t('categories.label')} type="text" onInput={(e) => setCategoryName(e.target.value)}/>
               </div>
               <IconButton icon="save"/>
+              <IconButton icon="close" type="reset" onPress={resetForm} backgroundColor="alert" color="alert-dark" shadowColor="alert-dark" />
             </CategoryForm>
           )
         }
-        {!formOpen && <DefaultButton fullWidth  label="Create a category" onPress={() => toggleForm(true)} />}
+        {!formOpen && <DefaultButton fullWidth textCentered label={t('categories.add')} onPress={() => toggleForm(true)} />}
       </CategoryModalContainer>
       <Overlay ref={overlayRef} onClick={beforeClose}/>
     </>
