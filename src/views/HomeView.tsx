@@ -34,7 +34,7 @@ export default function HomeView() {
   const notes = useNoteStore(state => state.noteList)
   const {categoryModalOpen, openNoteEdit, createEditNoteOpen, sidebarOpen} = useAppStore()
   const setUserInfos = useUserStore(state => state.setUserInfos)
-  const {selectedCategory, setSelectedCategory, categories, setCategories} = useCategoriesStore();
+  const {setSelectedCategory, setCategories} = useCategoriesStore();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
@@ -104,18 +104,15 @@ export default function HomeView() {
     <>
       <Header/>
       <Search/>
-      {sidebarOpen && <SideBar/>}
-      <CategoryList categories={categories} onCategorySelected={filterByCategory}/>
+      <CategoryList onCategorySelected={filterByCategory}/>
       <NoteList loading={loading} error={error} notes={filteredNotes}/>
       <IconAddButton>
         <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light" shadowColor="primary-dark"/>
       </IconAddButton>
+      {sidebarOpen && <SideBar/>}
       {createEditNoteOpen && <CreateEditNote onNoteUpdate={fetchNotes}/>}
       {categoryModalOpen &&
-        <CategoryModal
-          onCategoryUpdate={fetchCategories}
-          onFilterByCategoryUpdate={filterByCategory}
-          selectedCategory={selectedCategory}/>
+        <CategoryModal onCategoryUpdate={fetchCategories} onFilterByCategoryUpdate={filterByCategory}/>
       }
     </>
   )

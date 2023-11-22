@@ -3,7 +3,6 @@ import {Note} from '@/domain/Note.ts';
 
 const StyledNoteCard = styled.div`
   position: relative;
-  flex-basis: calc(50% - 1rem);
   z-index: 1;
   border-radius: 0.5rem;
   height: 20rem;
