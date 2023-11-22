@@ -3,13 +3,13 @@ import {Overlay} from '@/primary/common/SideBar.tsx';
 import {useEffect, useRef, useState} from 'react';
 import gsap from 'gsap';
 import {useInject} from '@/domain/hooks/UseInject.ts';
-import {Category} from '@/domain/Category.ts';
 import InputField from '@/primary/common/InputField.tsx';
 import IconButton from '@/primary/common/IconButton.tsx';
 import DefaultButton from '@/primary/common/DefaultButton.tsx';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import {useTranslation} from 'react-i18next';
+import {useCategoriesStore} from '@/primary/stores/categories.store.ts';
 
 export const CategoryModalContainer = styled.div`
   width: 100%;
@@ -68,14 +68,17 @@ export const CategoryForm = styled.form`
     flex: 1;
   }
 `
-export default function CategoryModal() {
+export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdate}: {onCategoryUpdate: () => void, onFilterByCategoryUpdate: (categoryId: string) => void }) {
+  const noteService = useInject('noteService')
+  const categoryService = useInject('categoryService');
+
   const {closeCategoryModal}= useAppStore();
   const {currentNote, setCurrentNote} = useNoteStore();
-  const noteService = useInject('noteService')
+  const {selectedCategory, categories, setCategories} = useCategoriesStore();
+
   const overlayRef = useRef(null);
   const containerRef = useRef(null);
-  const categoryService = useInject('categoryService');
-  const [categories, setCategories] = useState<Category[]>([])
+
   const triggerEnterAnimation = () => {
     const tl = gsap.timeline();
     tl
@@ -131,6 +134,7 @@ export default function CategoryModal() {
     if(categoryAlreadyExist(categoryName)) return;
     await categoryService.createCategory({name: categoryName, notes: []})
     await fetchCategories();
+    onCategoryUpdate();
     resetForm();
   }
 
@@ -145,9 +149,18 @@ export default function CategoryModal() {
     setCurrentNote(note);
   }
 
-  useEffect(() => {
-    console.log(currentNote)
-  }, [currentNote]);
+  const handleCategorySelection = async (categoryId: string) => {
+    if(!currentNote) {
+      onFilterByCategoryUpdate(categoryId);
+      beforeClose();
+    } else {
+      await bindCategoryToNote(categoryId);
+    }
+  }
+
+  const categoryItemSelected = (categoryId: string) => {
+    return currentNote ? currentNote.categories?.includes(categoryId) : selectedCategory === categoryId
+  }
 
   return (
     <>
@@ -158,7 +171,7 @@ export default function CategoryModal() {
         </div>
         <div className="category-list">
           {categories.map(category => (
-            <CategoryItem selected={currentNote!.categories?.includes(category.id)} className="category-item" key={category.id} onClick={() => bindCategoryToNote(category.id)}> {category.name}</CategoryItem>
+            <CategoryItem selected={categoryItemSelected(category.id)} className="category-item" key={category.id} onClick={() => handleCategorySelection(category.id)}> {category.name}</CategoryItem>
           ))}
         </div>
         {

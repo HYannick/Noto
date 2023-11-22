@@ -8,6 +8,7 @@ type IconButtonProps = {
   color?: string;
   backgroundColor?: string;
   shadowColor?: string;
+  small?: boolean;
   variant?: IconButtonVariant;
   dataTestId?: string;
   type?: 'submit' | 'reset' | undefined;
@@ -47,8 +48,8 @@ export const IconContainer = styled.span`
 `
 
 export const IconButtonComp = styled.button`
+  height: ${(props: { variant: string, shadowColor: string, small: boolean }) => props.small ? '3rem' : '5rem'};
   width: 5rem;
-  height: 5rem;
   position: relative;
   z-index: 1;
   border-radius: 0.5rem;
@@ -76,9 +77,9 @@ export const IconButtonContent = styled.div`
   border: none;
   ${(props: { variant: string, backgroundColor: string, shadowColor: string }) => variantStyles(props)}
 `
-export default function IconButton({dataTestId, onPress, icon, color = 'dark',backgroundColor= 'light', shadowColor ='dark', variant = 'default', type}: IconButtonProps) {
+export default function IconButton({dataTestId, onPress, icon, small = false, color = 'dark',backgroundColor= 'light', shadowColor ='dark', variant = 'default', type}: IconButtonProps) {
   return (
-    <IconButtonComp data-testid={dataTestId} onClick={onPress} variant={variant} type={type} shadowColor={shadowColor}>
+    <IconButtonComp data-testid={dataTestId} onClick={onPress} small={small} variant={variant} type={type} shadowColor={shadowColor}>
       <IconButtonContent className="icon-button-backdrop" variant={variant} backgroundColor={backgroundColor} shadowColor={shadowColor}>
          <IconContainer color={color}>
           {getIcon(icon)}

@@ -20,6 +20,7 @@ const noteResource = NoteResource(storage);
 const userResource = UserResource(storage);
 const categoryResource = CategoryResource(storage);
 
+
 const container: IContainer = {
   registry: {
     noteService: NoteService(noteResource),

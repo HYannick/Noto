@@ -13,6 +13,8 @@ import {useSearchStore} from '@/primary/stores/search.store.ts';
 import {useUserStore} from '@/primary/stores/user.store.ts';
 import SideBar from '@/primary/common/SideBar.tsx';
 import CategoryModal from '@/primary/category/CategoryModal.tsx';
+import CategoryList from '@/primary/category/CategoryList.tsx';
+import {useCategoriesStore} from '@/primary/stores/categories.store.ts';
 
 export const IconAddButton = styled.div`
   position: fixed;
@@ -23,16 +25,19 @@ export const IconAddButton = styled.div`
 
 
 export default function HomeView() {
+  const noteService = useInject('noteService');
+  const userService = useInject('userService');
+  const categoryService = useInject('categoryService');
+
   const searchQuery = useSearchStore((state) => state.searchQuery);
   const setNotes = useNoteStore(state => state.setNotes)
   const notes = useNoteStore(state => state.noteList)
-  const {categoryModalOpen,openNoteEdit, createEditNoteOpen, sidebarOpen} = useAppStore(state => state)
-  const noteService = useInject('noteService');
-  const userService = useInject('userService');
+  const {categoryModalOpen, openNoteEdit, createEditNoteOpen, sidebarOpen} = useAppStore()
+  const setUserInfos = useUserStore(state => state.setUserInfos)
+  const {selectedCategory, setSelectedCategory, categories, setCategories} = useCategoriesStore();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
-  const setUserInfos  = useUserStore(state => state.setUserInfos)
 
   const fetchUser = async () => {
     try {
@@ -57,9 +62,21 @@ export default function HomeView() {
     }
   }
 
+  const fetchCategories = async () => {
+    try {
+      const fetchedCategories = await categoryService.getAllCategories();
+      setCategories(fetchedCategories);
+    } catch (error) {
+      setError('Error fetching notes. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchNotes();
     fetchUser();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -69,20 +86,37 @@ export default function HomeView() {
 
   useEffect(() => {
     const query = searchQuery.toLowerCase();
-    const result =  notes.filter(note => note.title.toLowerCase().includes(query) || note.text.toLowerCase().includes(query))
+    const result = notes.filter(note => note.title.toLowerCase().includes(query) || note.text.toLowerCase().includes(query))
     setFilteredNotes(result);
   }, [searchQuery]);
+
+  const filterByCategory = (categoryId: string) => {
+    if (categoryId === 'all') {
+      setSelectedCategory('all');
+      setFilteredNotes(notes);
+      return;
+    }
+    setSelectedCategory(categoryId);
+    setFilteredNotes(notes.filter(note => note.categories.includes(categoryId)))
+  }
+
   return (
     <>
       <Header/>
       <Search/>
       {sidebarOpen && <SideBar/>}
+      <CategoryList categories={categories} onCategorySelected={filterByCategory}/>
       <NoteList loading={loading} error={error} notes={filteredNotes}/>
       <IconAddButton>
         <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light" shadowColor="primary-dark"/>
       </IconAddButton>
       {createEditNoteOpen && <CreateEditNote onNoteUpdate={fetchNotes}/>}
-      {categoryModalOpen && <CategoryModal />}
+      {categoryModalOpen &&
+        <CategoryModal
+          onCategoryUpdate={fetchCategories}
+          onFilterByCategoryUpdate={filterByCategory}
+          selectedCategory={selectedCategory}/>
+      }
     </>
   )
 }
