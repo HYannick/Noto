@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import InputField from './InputField.tsx';
 import {FormEvent, useState} from 'react';
 import {useSearchStore} from '@/primary/stores/search.store.ts';
+import {useWindowScroll} from '@uidotdev/usehooks';
 
 export const SearchContainer = styled.form`
   display: flex;
@@ -32,9 +33,11 @@ export default function Search() {
   const {t} = useTranslation();
   const setSearchQuery = useSearchStore((state) => state.setSearchQuery)
   const [inputValue, setInputValue] = useState('')
+  const [_, scrollTo] = useWindowScroll();
   const initSearch = (e: FormEvent) => {
     e.preventDefault();
     setSearchQuery(inputValue);
+    scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
   return (
     <SearchContainer onSubmit={initSearch}>

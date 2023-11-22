@@ -15,6 +15,7 @@ import SideBar from '@/primary/common/SideBar.tsx';
 import CategoryModal from '@/primary/category/CategoryModal.tsx';
 import CategoryList from '@/primary/category/CategoryList.tsx';
 import {useCategoriesStore} from '@/primary/stores/categories.store.ts';
+import { useIntersectionObserver } from '@uidotdev/usehooks';
 
 export const IconAddButton = styled.div`
   position: fixed;
@@ -25,12 +26,12 @@ export const IconAddButton = styled.div`
 
 export const StickyHeader = styled.div`
   position: sticky;
-  top: 0;
+  top: -0.1rem;
   margin: 0 -1.5rem;
   z-index: 10;
   background: var(--color-light);
   padding: 0 1.5rem 1.5rem;
-  border-bottom: 0.1rem solid var(--color-dark);
+  border-bottom: ${(props: {isPinned: boolean }) => props.isPinned && '0.1rem solid var(--color-dark)'};
 `
 
 
@@ -110,10 +111,15 @@ export default function HomeView() {
     setFilteredNotes(notes.filter(note => note.categories.includes(categoryId)))
   }
 
+  const [ref, entry] = useIntersectionObserver({
+    threshold: 1,
+    root: null,
+    rootMargin: "0px",
+  });
   return (
     <>
       <Header/>
-      <StickyHeader>
+      <StickyHeader ref={ref} isPinned={entry ? entry.intersectionRatio < 1 : false}>
         <Search/>
         <CategoryList onCategorySelected={filterByCategory}/>
       </StickyHeader>

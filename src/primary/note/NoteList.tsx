@@ -20,9 +20,10 @@ export const NoteSection = styled.div`
   flex: 1;
   height: 100%;
   background: var(--color-background);
-  border-radius: 0;
-  padding: 2rem 1.5rem;
+  border-radius: 2rem;
+  padding: 2.5rem 1.5rem;
   margin: 0 -1.5rem -1.5rem;
+  border: 0.1rem solid var(--color-dark);
   @media screen and (min-width: 1024px) {
     border-radius: 1rem 1rem 0 0;
   }

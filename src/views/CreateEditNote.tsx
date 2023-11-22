@@ -42,14 +42,15 @@ export const CreateEditNoteForm = styled.form`
 
   .create-note-title {
     margin-top: 1.5rem;
-
     input {
       font-size: 4rem;
     }
   }
 
   .create-note-body {
-    flex: 1
+    flex: 1;
+    border-bottom: 0.1rem solid var(--color-grey);
+    background: var(--color-light);
   }
 
   .create-note-current-date {
