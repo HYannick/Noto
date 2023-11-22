@@ -22,7 +22,7 @@ export const NoteSection = styled.div`
   background: var(--color-background);
   border-radius: 0;
   padding: 2rem 1.5rem;
-  margin: 1.5rem -1.5rem -1.5rem;
+  margin: 0 -1.5rem -1.5rem;
   @media screen and (min-width: 1024px) {
     border-radius: 1rem 1rem 0 0;
   }

@@ -40,7 +40,7 @@ vi.mock('react-i18next', () => ({
 vi.mock('@/domain/hooks/UseInject.ts', () => ({
   useInject: vi.fn((() => noteService))
 }))
-const renderComponent = (onNoteToUpdate: () => {} = vi.fn()) => {
+const renderComponent = (onNoteToUpdate: () => void = vi.fn()) => {
   return render(
     <CreateEditNote onNoteUpdate={onNoteToUpdate}/>
   );

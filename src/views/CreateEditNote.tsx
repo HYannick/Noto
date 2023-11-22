@@ -79,7 +79,7 @@ export const NoteHeaderActions = styled.div`
 `
 
 export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => void }) {
-  let tl = gsap.timeline()
+  const tl = gsap.timeline()
   const {currentNote, setCurrentNote} = useNoteStore()
   const {closeNoteEdit, openCategoryModal} = useAppStore()
   const {t} = useTranslation();

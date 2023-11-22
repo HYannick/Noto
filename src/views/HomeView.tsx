@@ -23,6 +23,16 @@ export const IconAddButton = styled.div`
   z-index: 5;
 `
 
+export const StickyHeader = styled.div`
+  position: sticky;
+  top: 0;
+  margin: 0 -1.5rem;
+  z-index: 10;
+  background: var(--color-light);
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 0.1rem solid var(--color-dark);
+`
+
 
 export default function HomeView() {
   const noteService = useInject('noteService');
@@ -103,8 +113,10 @@ export default function HomeView() {
   return (
     <>
       <Header/>
-      <Search/>
-      <CategoryList onCategorySelected={filterByCategory}/>
+      <StickyHeader>
+        <Search/>
+        <CategoryList onCategorySelected={filterByCategory}/>
+      </StickyHeader>
       <NoteList loading={loading} error={error} notes={filteredNotes}/>
       <IconAddButton>
         <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light" shadowColor="primary-dark"/>
