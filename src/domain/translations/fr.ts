@@ -51,6 +51,11 @@ export default {
         clearData: 'Supprimer les données',
         clearAllNotes: 'Supprimer toutes les notes',
         clearAllCategories: 'Supprimer toutes les catégories',
+        clearAllNotesMessage: 'Êtes-vous sûr de vouloir supprimer toutes les notes ?',
+        clearAllCategoriesMessage: 'Êtes-vous sûr de vouloir supprimer toutes les catégories ?',
+        clearAllDataMessage: 'Êtes-vous sûr de vouloir supprimer toutes les données ?',
+        warningNotice: 'Cette action est irréversible.',
+
       }
     }
   }

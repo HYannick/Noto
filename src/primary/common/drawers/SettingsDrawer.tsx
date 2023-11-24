@@ -15,17 +15,83 @@ import ImageUploader from '../ImageUploader.tsx';
 import {ImageBlob} from '@/domain/ImageBlob.ts';
 import gsap from 'gsap';
 import {AppUserInfos, OptionItem, Overlay, SideBarContainer} from '@/primary/common/drawers/SettingsDrawer.styled.tsx';
+import {createPortal} from 'react-dom';
+import styled from '@emotion/styled';
+import {useCategoriesStore} from '@/primary/stores/categories.store.ts';
 
 
+export const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-opacity);
+  .modal-container {
+    text-align: center;
+    max-width: 30rem;
+    .modal-content {
+      background: var(--color-light);
+      padding: 2rem;
+      border-radius: 0.5rem;
+    }
+    .modal-title {
+      font-size: 3rem;
+      margin-top: 0;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--color-alert);
+    }
+    .modal-message {
+      font-size: 1.6rem;
+    }
+    .modal-sub-message {
+      font-size: 1.6rem;
+      margin-top: 1.5rem;
+      margin-bottom: 3rem;
+      font-weight: bold;
+      color: var(--color-alert);
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+    }
+  }
+`
+const ConfirmModal = ({onConfirm, onCancel, message, subMessage}: { onConfirm: () => void, onCancel: () => void, message: string, subMessage?: string }) => {
+  return (
+    <Modal>
+      <div className="modal-container">
+        <h4 className="modal-title">Warning</h4>
+        <div className="modal-content">
+          <div className="modal-message">{message}</div>
+          {subMessage && <div className="modal-sub-message">&#9888;&#65039; {subMessage} &#9888;&#65039;</div>}
+          <div className="modal-actions">
+            <IconButton icon="close" onPress={onCancel} shadowColor='alert-dark' color='alert-dark' backgroundColor='alert'/>
+            <IconButton icon="check" onPress={onConfirm} shadowColor='valid-dark' color='valid-dark' backgroundColor='valid'/>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  )
+}
 export default function SettingsDrawer() {
   const {closeSidebar, setLayout} = useAppStore()
   const {setNotes} = useNoteStore()
+  const {setCategories} = useCategoriesStore()
   const userService = useInject('userService');
   const {username: defaultUsername, avatar: defaultAvatar, setUserInfos} = useUserStore();
   const {t} = useTranslation();
   const {switchTheme, themeIcon} = useTheme();
   const [username, setUsername] = useState('Stranger');
   const [avatar, setAvatar] = useState<ImageBlob>(null);
+  const [modal, setModal] = useState<'clearNotes' | 'clearCategories' | 'clearData' | null>(null);
 
   useEffect(() => {
     setUsername(defaultUsername);
@@ -33,6 +99,10 @@ export default function SettingsDrawer() {
   }, [defaultAvatar, defaultUsername]);
   const componentRef = useRef(null);
   const overlayRef = useRef(null);
+
+  const hideModal = () => {
+    setModal(null);
+  }
   const beforeClose = () => {
     const tl = gsap.timeline({
       onComplete: closeSidebar,
@@ -88,82 +158,122 @@ export default function SettingsDrawer() {
     setLayout(layout)
   }
 
-  const clearData = () => {
-    alert('This will clear all your data. This action is irreversible.');
-    localforage.setItem('notes', [])
-    setNotes([])
+  const clearData = async () => {
+    const localStorageKeys = await localforage.keys();
+    const clearKeys = localStorageKeys.map(key => localforage.removeItem(key))
+    await Promise.all(clearKeys);
+    setNotes([]);
+    setCategories([]);
+    hideModal();
   }
-  const clearNotes = () => {
-    alert('This will clear all your notes. This action is irreversible.');
-    localforage.setItem('notes', [])
-    setNotes([])
+  const clearNotes = async () => {
+    await localforage.setItem('notes', [])
+    setNotes([]);
+    hideModal();
   }
 
-  const clearCategories = () => {
-    alert('This will clear all your categories. This action is irreversible.')
-    localforage.setItem('categories', [])
-    setNotes([])
+  const clearCategories = async () => {
+    await localforage.setItem('categories', []);
+    setCategories([]);
+    hideModal();
   }
+
+  const modalConfig = {
+    clearNotes: {
+      message: t('options.dataManagement.clearAllNotesMessage'),
+      subMessage: t('options.dataManagement.warningNotice'),
+      onConfirm: clearNotes
+    },
+    clearCategories: {
+      message: t('options.dataManagement.clearAllCategoriesMessage'),
+      subMessage: t('options.dataManagement.warningNotice'),
+      onConfirm: clearCategories
+    },
+    clearData: {
+      message: t('options.dataManagement.clearDataMessage'),
+      subMessage: t('options.dataManagement.warningNotice'),
+      onConfirm: clearData
+    }
+  };
+
+  const showModals = () => {
+    const currentModalConfig = modal && modalConfig[modal];
+
+    return (
+      <>
+        {currentModalConfig && createPortal(
+          <ConfirmModal
+            message={currentModalConfig.message}
+            subMessage={currentModalConfig.subMessage}
+            onCancel={() => setModal(null)}
+            onConfirm={currentModalConfig.onConfirm}
+          />,
+          document.body
+        )}
+      </>
+    );
+  };
 
   return (
     <>
       <SideBarContainer data-testid="settings-drawer" ref={componentRef}>
-          <div className="sidebar-header">
-            <div className="sidebar-title">
-              N<span>ō</span>to
+        <div className="sidebar-header">
+          <div className="sidebar-title">
+            N<span>ō</span>to
+          </div>
+          <IconButton icon="close" variant="borderless" onPress={beforeClose} dataTestId="close-sidebar-button"/>
+        </div>
+        <div className="sidebar-menu">
+          <OptionItem>
+            <div className="option-label">{t('options.userInfos.label')}</div>
+            <AppUserInfos>
+              <div className="user-avatar" data-testid="user-avatar">
+                <ImageUploader value={defaultAvatar} onImageUploaded={updateAvatar}/>
+              </div>
+              <form className="user-infos" onSubmit={updateUser}>
+                <div className="user-input" data-testid="user-input">
+                  <InputField value={username} type="text" onInput={(e) => setUsername(e.target.value)}
+                              placeholder={t('options.userInfos.placeholder')}/>
+                </div>
+                <DefaultButton dataTestId="user-save-button" label={t('buttons.save')}/>
+              </form>
+            </AppUserInfos>
+          </OptionItem>
+          <OptionItem>
+            <div className="option-label">{t('options.style.label')}</div>
+            <div className="option-buttons">
+              <span>{t('options.style.layout')}</span>
+              <div className="options-buttons-actions">
+                <IconButton icon="layout-list" onPress={() => saveLayout('list')}/>
+                <IconButton icon="layout-grid" onPress={() => saveLayout('grid')}/>
+              </div>
             </div>
-            <IconButton icon="close" variant="borderless" onPress={beforeClose} dataTestId="close-sidebar-button"/>
-          </div>
-          <div className="sidebar-menu">
-            <OptionItem>
-              <div className="option-label">{t('options.userInfos.label')}</div>
-              <AppUserInfos>
-                <div className="user-avatar" data-testid="user-avatar">
-                  <ImageUploader value={defaultAvatar} onImageUploaded={updateAvatar}/>
-                </div>
-                <form className="user-infos" onSubmit={updateUser}>
-                  <div className="user-input" data-testid="user-input">
-                    <InputField value={username} type="text" onInput={(e) => setUsername(e.target.value)}
-                                placeholder={t('options.userInfos.placeholder')}/>
-                  </div>
-                  <DefaultButton dataTestId="user-save-button" label={t('buttons.save')}/>
-                </form>
-              </AppUserInfos>
-            </OptionItem>
-            <OptionItem>
-              <div className="option-label">{t('options.style.label')}</div>
-              <div className="option-buttons">
-                <span>{t('options.style.layout')}</span>
-                <div className="options-buttons-actions">
-                  <IconButton icon="layout-list" onPress={() => saveLayout('list')}/>
-                  <IconButton icon="layout-grid" onPress={() => saveLayout('grid')}/>
-                </div>
+            {/*<div className="option-buttons">{t('options.style.sort')}</div>*/}
+            <div className="option-buttons">
+              <span>{t('options.style.theme')}</span>
+              <div className="options-buttons-actions">
+                <IconButton icon={themeIcon as IconName} onPress={switchTheme}/>
               </div>
-              {/*<div className="option-buttons">{t('options.style.sort')}</div>*/}
-              <div className="option-buttons">
-                <span>{t('options.style.theme')}</span>
-                <div className="options-buttons-actions">
-                  <IconButton icon={themeIcon as IconName} onPress={switchTheme}/>
-                </div>
+            </div>
+            <div className="option-buttons">
+              <span>{t('options.languages.label')}</span>
+              <div className="options-buttons-actions">
+                <IconButton icon="en-flag" color="none" onPress={() => setLanguage('en')} dataTestId="en-language-button"/>
+                <IconButton icon="de-flag" color="none" onPress={() => setLanguage('de')} dataTestId="de-language-button"/>
+                <IconButton icon="fr-flag" color="none" onPress={() => setLanguage('fr')} dataTestId="fr-language-button"/>
               </div>
-              <div className="option-buttons">
-                <span>{t('options.languages.label')}</span>
-                <div className="options-buttons-actions">
-                  <IconButton icon="en-flag" color="none" onPress={() => setLanguage('en')} dataTestId="en-language-button"/>
-                  <IconButton icon="de-flag" color="none" onPress={() => setLanguage('de')} dataTestId="de-language-button"/>
-                  <IconButton icon="fr-flag" color="none" onPress={() => setLanguage('fr')} dataTestId="fr-language-button"/>
-                </div>
-              </div>
-            </OptionItem>
-            <OptionItem>
-              <div className="option-label">{t('options.dataManagement.label')}</div>
-              <div className="option-buttons" onClick={clearNotes}>{t('options.dataManagement.clearAllNotes')}</div>
-              <div className="option-buttons" onClick={clearCategories}>{t('options.dataManagement.clearAllCategories')}</div>
-              <div className="option-buttons" onClick={clearData}>{t('options.dataManagement.clearData')}</div>
-            </OptionItem>
-          </div>
+            </div>
+          </OptionItem>
+          <OptionItem>
+            <div className="option-label">{t('options.dataManagement.label')}</div>
+            <div className="option-buttons" onClick={() => setModal('clearNotes')}>{t('options.dataManagement.clearAllNotes')}</div>
+            <div className="option-buttons" onClick={() => setModal('clearCategories')}>{t('options.dataManagement.clearAllCategories')}</div>
+            <div className="option-buttons" onClick={() => setModal('clearData')}>{t('options.dataManagement.clearData')}</div>
+          </OptionItem>
+        </div>
       </SideBarContainer>
       <Overlay ref={overlayRef} onClick={beforeClose}/>
+      {showModals()}
     </>
   )
 }

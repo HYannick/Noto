@@ -44,6 +44,10 @@ export default {
         clearData: 'Clear data',
         clearAllNotes: 'Clear all notes',
         clearAllCategories: 'Clear all categories',
+        clearAllNotesMessage: 'Are you sure you want to delete all notes?',
+        clearAllCategoriesMessage: 'Are you sure you want to delete all categories?',
+        clearAllDataMessage: 'Are you sure you want to delete all data?',
+        warningNotice: 'This action is irreversible.',
       },
       userInfos: {
         label: 'Information',

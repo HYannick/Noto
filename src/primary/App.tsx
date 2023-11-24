@@ -60,7 +60,6 @@ function App() {
     setTheme();
     getLanguage();
     getLayout();
-    // fillStorage();
   }, [])
 
 

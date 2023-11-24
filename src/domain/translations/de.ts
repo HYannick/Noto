@@ -44,6 +44,10 @@ export default {
         export: 'Daten exportieren',
         import: 'Daten importieren',
         label: 'Daten',
+        clearAllNotesMessage: 'Möchten Sie wirklich alle Notizen löschen?',
+        clearAllCategoriesMessage: 'Möchten Sie wirklich alle Kategorien löschen?',
+        clearAllDataMessage: 'Möchten Sie wirklich alle Daten löschen?',
+        warningNotice: 'Diese Aktion ist nicht rückgängig zu machen.',
       },
       userInfos: {
         label: 'Informationen',
