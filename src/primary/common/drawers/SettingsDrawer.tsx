@@ -190,7 +190,7 @@ export default function SettingsDrawer() {
       onConfirm: clearCategories
     },
     clearData: {
-      message: t('options.dataManagement.clearDataMessage'),
+      message: t('options.dataManagement.clearAllDataMessage'),
       subMessage: t('options.dataManagement.warningNotice'),
       onConfirm: clearData
     }
