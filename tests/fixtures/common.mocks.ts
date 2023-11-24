@@ -11,6 +11,8 @@ import {CategoryResourceRepository} from '@/secondary/category/CategoryResource.
 import {ICategoryService} from '@/primary/category/CategoryService.ts';
 
 export const mockAppStore = (opts?: Partial<AppStoreState>): AppStoreState => ({
+  layout: 'grid',
+  setLayout: vi.fn(),
   sidebarOpen: false,
   createEditNoteOpen: false,
   categoryModalOpen: false,
