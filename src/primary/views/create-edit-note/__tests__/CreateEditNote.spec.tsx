@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {act} from 'react-dom/test-utils';
-import CreateEditNote from '../CreateEditNote.tsx';
+import CreateEditNoteView from '../CreateEditNoteView.tsx';
 import {mockNote} from '@tests/fixtures/notes.mocks.ts';
 import {mockNoteService, mockNoteStore} from '@tests/fixtures/common.mocks.ts';
 import * as useNoteStore from '@/primary/stores/note.store.ts';
@@ -42,7 +42,7 @@ vi.mock('@/domain/hooks/UseInject.ts', () => ({
 }))
 const renderComponent = (onNoteToUpdate: () => void = vi.fn()) => {
   return render(
-    <CreateEditNote onNoteUpdate={onNoteToUpdate}/>
+    <CreateEditNoteView onNoteUpdate={onNoteToUpdate}/>
   );
 }
 

@@ -31,12 +31,26 @@ export default {
       title: 'Kategorien',
     },
     options: {
+      style: {
+        label: 'Stil',
+        layout: 'Layout',
+        sort: 'Sortieren nach',
+        theme: 'Thema',
+      },
+      dataManagement: {
+        clearAllNotes: 'Alle Notizen löschen',
+        clearAllCategories: 'Alle Kategorien löschen',
+        clearData: 'Daten löschen',
+        export: 'Daten exportieren',
+        import: 'Daten importieren',
+        label: 'Daten',
+      },
       userInfos: {
-        title: 'Informationen',
+        label: 'Informationen',
         placeholder: 'Name'
       },
       languages: {
-        title: 'Sprachen'
+        label: 'Sprachen'
       }
     }
   }

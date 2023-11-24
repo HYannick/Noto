@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import IconButton from './IconButton.tsx';
+import IconButton from './buttons/IconButton.tsx';
 import {useTranslation} from 'react-i18next';
 import InputField from './InputField.tsx';
 import {FormEvent, useState} from 'react';

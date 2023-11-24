@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import {Note} from '@/domain/Note.ts';
+import {useAppStore} from '@/primary/stores/app.store.ts';
 
 const StyledNoteCard = styled.div`
   position: relative;
   z-index: 1;
   border-radius: 0.5rem;
-  height: 20rem;
+  height: ${(props: {layout: 'grid' | 'list'}) => props.layout == 'grid' ? '20rem' : '10rem'};
   border: none;
   background: var(--color-dark);
   cursor: pointer;
@@ -20,7 +21,7 @@ const StyledNoteCard = styled.div`
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
-    height: 20rem;
+    height: ${(props: {layout: 'grid' | 'list'}) => props.layout == 'grid' ? '20rem' : '10rem'};
     z-index: -1;
     border-radius: 0.5rem;
     border: none;
@@ -57,8 +58,9 @@ const StyledNoteCard = styled.div`
 `
 
 export const NoteCard = ({onPress, className, note}: { note: Note, className: any, onPress: () => void }) => {
+  const {layout} = useAppStore();
   return (
-    <StyledNoteCard className={className} onClick={onPress}>
+    <StyledNoteCard className={className} onClick={onPress} layout={layout}>
       <div className="card-content">
         <h4 className="note-title">{note.title}</h4>
         <p className="note-text">{note.text}</p>

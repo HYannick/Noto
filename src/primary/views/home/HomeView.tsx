@@ -2,37 +2,22 @@ import {useEffect, useState} from 'react';
 import Header from '@/primary/common/Header.tsx';
 import Search from '@/primary/common/Search.tsx';
 import NoteList from '@/primary/note/NoteList.tsx';
-import CreateEditNote from './CreateEditNote.tsx';
-import IconButton from '@/primary/common/IconButton.tsx';
-import styled from '@emotion/styled';
+import CreateEditNoteView from '../create-edit-note/CreateEditNoteView.tsx';
+import IconButton from '@/primary/common/buttons/IconButton.tsx';
 import {Note} from '@/domain/Note.ts';
 import {useInject} from '@/domain/hooks/UseInject.ts';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import {useSearchStore} from '@/primary/stores/search.store.ts';
 import {useUserStore} from '@/primary/stores/user.store.ts';
-import SideBar from '@/primary/common/SideBar.tsx';
+import SettingsDrawer from '@/primary/common/drawers/SettingsDrawer.tsx';
 import CategoryModal from '@/primary/category/CategoryModal.tsx';
 import CategoryList from '@/primary/category/CategoryList.tsx';
 import {useCategoriesStore} from '@/primary/stores/categories.store.ts';
 import { useIntersectionObserver } from '@uidotdev/usehooks';
+import {IconAddButton, StickyHeader} from '@/primary/views/home/HomeView.styled.tsx';
 
-export const IconAddButton = styled.div`
-  position: fixed;
-  bottom: 1.5rem;
-  right: 2rem;
-  z-index: 5;
-`
 
-export const StickyHeader = styled.div`
-  position: sticky;
-  top: -0.1rem;
-  margin: 0 -1.5rem;
-  z-index: 10;
-  background: var(--color-light);
-  padding: 0 1.5rem 1.5rem;
-  border-bottom: ${(props: {isPinned: boolean }) => props.isPinned && '0.1rem solid var(--color-dark)'};
-`
 
 
 export default function HomeView() {
@@ -40,16 +25,21 @@ export default function HomeView() {
   const userService = useInject('userService');
   const categoryService = useInject('categoryService');
 
-  const searchQuery = useSearchStore((state) => state.searchQuery);
-  const setNotes = useNoteStore(state => state.setNotes)
-  const notes = useNoteStore(state => state.noteList)
+  const {searchQuery} = useSearchStore();
+  const {noteList: notes, setNotes} = useNoteStore()
   const {categoryModalOpen, openNoteEdit, createEditNoteOpen, sidebarOpen} = useAppStore()
-  const setUserInfos = useUserStore(state => state.setUserInfos)
+  const {setUserInfos} = useUserStore()
   const {setSelectedCategory, setCategories} = useCategoriesStore();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
+  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
+  const [ref, entry] = useIntersectionObserver({
+    threshold: 1,
+    root: null,
+    rootMargin: "0px",
+  });
+  const isHeaderPinned = entry ? entry.intersectionRatio < 1 : false;
   const fetchUser = async () => {
     try {
       const fetchedUser = await userService.getUserInfo();
@@ -84,22 +74,11 @@ export default function HomeView() {
     }
   }
 
-  useEffect(() => {
-    fetchNotes();
-    fetchUser();
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    setFilteredNotes(notes);
-  }, [notes]);
-
-
-  useEffect(() => {
+  const performSearch = () => {
     const query = searchQuery.toLowerCase();
     const result = notes.filter(note => note.title.toLowerCase().includes(query) || note.text.toLowerCase().includes(query))
     setFilteredNotes(result);
-  }, [searchQuery]);
+  }
 
   const filterByCategory = (categoryId: string) => {
     if (categoryId === 'all') {
@@ -111,15 +90,24 @@ export default function HomeView() {
     setFilteredNotes(notes.filter(note => note.categories.includes(categoryId)))
   }
 
-  const [ref, entry] = useIntersectionObserver({
-    threshold: 1,
-    root: null,
-    rootMargin: "0px",
-  });
+  useEffect(() => {
+    fetchNotes();
+    fetchUser();
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    setFilteredNotes(notes);
+  }, [notes]);
+
+  useEffect(() => {
+    performSearch();
+  }, [searchQuery]);
+
   return (
     <>
       <Header/>
-      <StickyHeader ref={ref} isPinned={entry ? entry.intersectionRatio < 1 : false}>
+      <StickyHeader ref={ref} isPinned={isHeaderPinned}>
         <Search/>
         <CategoryList onCategorySelected={filterByCategory}/>
       </StickyHeader>
@@ -127,8 +115,8 @@ export default function HomeView() {
       <IconAddButton>
         <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light" shadowColor="primary-dark"/>
       </IconAddButton>
-      {sidebarOpen && <SideBar/>}
-      {createEditNoteOpen && <CreateEditNote onNoteUpdate={fetchNotes}/>}
+      {sidebarOpen && <SettingsDrawer/>}
+      {createEditNoteOpen && <CreateEditNoteView onNoteUpdate={fetchNotes}/>}
       {categoryModalOpen &&
         <CategoryModal onCategoryUpdate={fetchCategories} onFilterByCategoryUpdate={filterByCategory}/>
       }

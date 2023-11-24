@@ -1,4 +1,4 @@
-import IconButton from '@/primary/common/IconButton.tsx';
+import IconButton from '@/primary/common/buttons/IconButton.tsx';
 import styled from '@emotion/styled';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useCategoriesStore} from '@/primary/stores/categories.store.ts';

@@ -7,7 +7,7 @@ import {Note} from '@/domain/Note.ts';
 
 export const NoteContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: ${(props: { layout: 'grid' | 'list' }) => props.layout === 'list' ? '1fr' : '1fr 1fr'};
   gap: 1.5rem;
   @media screen and (min-width: 1024px) {
     grid-template-columns: 1fr 1fr 1fr;
@@ -32,7 +32,7 @@ export const NoteSection = styled.div`
 export default function NoteList({loading, error, notes}: any) {
   const noteService = useInject('noteService');
   const {setCurrentNote} = useNoteStore((state) => state);
-  const {openNoteEdit} = useAppStore((state) => state);
+  const {openNoteEdit, layout} = useAppStore((state) => state);
 
   const openNote = async (noteId: string) => {
     const note = await noteService.getNoteById(noteId);
@@ -44,7 +44,7 @@ export default function NoteList({loading, error, notes}: any) {
       {loading && <p>Loading...</p>}
       {error && <p style={{color: 'red'}}>{error}</p>}
       {!loading && !error && (
-        <NoteContainer className="grid">
+        <NoteContainer className="grid" layout={layout}>
           {notes && notes.map((note: Note) => (
             <NoteCard className="grid-item" note={note} key={note.id} onPress={() => openNote(note.id)}></NoteCard>
           ))}

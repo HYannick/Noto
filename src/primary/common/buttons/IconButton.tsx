@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import getIcon, {IconName} from '@/assets/svg/icons';
+import getIcon, {IconName} from '@assets/svg/icons';
 
 type IconButtonVariant = 'default' | 'borderless';
 type IconButtonProps = {
@@ -11,6 +11,7 @@ type IconButtonProps = {
   small?: boolean;
   variant?: IconButtonVariant;
   dataTestId?: string;
+  iconSize?: string;
   type?: 'submit' | 'reset' | undefined;
 }
 const variantStyles = (props: { variant: string, backgroundColor: string, shadowColor: string }) => {
@@ -33,8 +34,8 @@ const variantStyles = (props: { variant: string, backgroundColor: string, shadow
 }
 
 export const IconContainer = styled.span`
-  width: 2rem;
-  height: 2rem;
+ width: ${(props: { size: string }) => `${props.size}rem`};
+  height: ${(props: { size: string }) => `${props.size}rem`};
   svg {
     width: 100%;
     height: 100%;
@@ -44,6 +45,9 @@ export const IconContainer = styled.span`
   }
   rect {
     fill: var(--color-${(props) => props.color});
+  }
+  circle {
+    stroke: var(--color-${(props) => props.color});
   }
 `
 
@@ -77,11 +81,11 @@ export const IconButtonContent = styled.div`
   border: none;
   ${(props: { variant: string, backgroundColor: string, shadowColor: string }) => variantStyles(props)}
 `
-export default function IconButton({dataTestId, onPress, icon, small = false, color = 'dark',backgroundColor= 'light', shadowColor ='dark', variant = 'default', type}: IconButtonProps) {
+export default function IconButton({dataTestId, onPress, icon, small = false, iconSize = "2", color = 'dark', backgroundColor= 'light', shadowColor ='dark', variant = 'default', type}: IconButtonProps) {
   return (
-    <IconButtonComp data-testid={dataTestId} onClick={onPress} small={small} variant={variant} type={type} shadowColor={shadowColor}>
+    <IconButtonComp data-testid={dataTestId} onClick={onPress} small={small}  variant={variant} type={type} shadowColor={shadowColor}>
       <IconButtonContent className="icon-button-backdrop" variant={variant} backgroundColor={backgroundColor} shadowColor={shadowColor}>
-         <IconContainer color={color}>
+         <IconContainer size={iconSize} color={color}>
           {getIcon(icon)}
         </IconContainer>
       </IconButtonContent>

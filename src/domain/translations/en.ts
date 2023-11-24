@@ -31,12 +31,26 @@ export default {
       title: 'Categories',
     },
     options: {
+      style: {
+        label: 'Style',
+        layout: 'Layout',
+        sort: 'Sort by',
+        theme: 'Theme',
+      },
+      dataManagement: {
+        label: 'Data',
+        export: 'Export data',
+        import: 'Import data',
+        clearData: 'Clear data',
+        clearAllNotes: 'Clear all notes',
+        clearAllCategories: 'Clear all categories',
+      },
       userInfos: {
-        title: 'Information',
+        label: 'Information',
         placeholder: 'Name'
       },
       languages: {
-        title: 'Languages'
+        label: 'Languages'
       }
     }
   }

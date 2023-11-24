@@ -32,11 +32,25 @@ export default {
     },
     options: {
       userInfos: {
-        title: 'Information',
+        label: 'Information',
         placeholder: 'Nom'
       },
       languages: {
-        title: 'Langues'
+        label: 'Langues'
+      },
+      style: {
+        label: 'Style',
+        layout: 'Disposition',
+        sort: 'Trier par',
+        theme: 'Thème',
+      },
+      dataManagement: {
+        label: 'Données',
+        export: 'Exporter les données',
+        import: 'Importer les données',
+        clearData: 'Supprimer les données',
+        clearAllNotes: 'Supprimer toutes les notes',
+        clearAllCategories: 'Supprimer toutes les catégories',
       }
     }
   }

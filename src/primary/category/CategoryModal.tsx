@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
-import {Overlay} from '@/primary/common/SideBar.tsx';
+import {Overlay} from '@/primary/common/drawers/SettingsDrawer.styled.tsx';
 import {useEffect, useRef, useState} from 'react';
 import gsap from 'gsap';
 import {useInject} from '@/domain/hooks/UseInject.ts';
 import InputField from '@/primary/common/InputField.tsx';
-import IconButton from '@/primary/common/IconButton.tsx';
-import DefaultButton from '@/primary/common/DefaultButton.tsx';
+import IconButton from '@/primary/common/buttons/IconButton.tsx';
+import DefaultButton from '@/primary/common/buttons/DefaultButton.tsx';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import {useTranslation} from 'react-i18next';

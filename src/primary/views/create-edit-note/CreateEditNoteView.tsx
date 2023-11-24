@@ -1,5 +1,4 @@
-import styled from '@emotion/styled';
-import IconButton from '@/primary/common/IconButton.tsx';
+import IconButton from '@/primary/common/buttons/IconButton.tsx';
 import {ChangeEvent, FormEvent, useEffect, useRef, useState} from 'react';
 import InputField from '@/primary/common/InputField.tsx';
 import {useTranslation} from 'react-i18next';
@@ -9,88 +8,28 @@ import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import OptionMenu from '@/primary/common/OptionMenu.tsx';
 import gsap from 'gsap';
+import {CreateEditNoteForm, NoteHeaderActions} from '@/primary/views/create-edit-note/CreateEditNoteView.styled.tsx';
 
-export const CreateEditNoteForm = styled.form`
-  transform: translateY(10vh);
-  opacity: 0;
-  visibility: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10;
-  background: var(--color-light);
-  display: flex;
-  flex-direction: column;
 
-  .create-note-header {
-    padding: 1.5rem;
-    background: var(--color-background);
-  }
-
-  .create-note-footer {
-    padding: 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .save-button, .back-button {
-    opacity: 0;
-    scale: 0.8;
-  }
-
-  .create-note-title {
-    margin-top: 1.5rem;
-    input {
-      font-size: 4rem;
-    }
-  }
-
-  .create-note-body {
-    flex: 1;
-    border-bottom: 0.1rem solid var(--color-grey);
-    background: var(--color-light);
-  }
-
-  .create-note-current-date {
-    display: block;
-    margin-top: 1rem;
-    color: var(--color-grey-500);
-  }
-
-  .create-note-textarea {
-    font-size: 1.6rem;
-    border: none;
-    background: transparent;
-    width: 100%;
-    resize: none;
-    color: var(--color-dark);
-    padding: 1.5rem;
-    height: 100%;
-    outline: transparent;
-    font-family: var(--main-font);
-  }
-`
-
-export const NoteHeaderActions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-`
-
-export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => void }) {
-  const tl = gsap.timeline()
-  const {currentNote, setCurrentNote} = useNoteStore()
-  const {closeNoteEdit, openCategoryModal} = useAppStore()
-  const {t} = useTranslation();
+export default function CreateEditNoteView({onNoteUpdate}: { onNoteUpdate: () => void }) {
   const noteService = useInject('noteService');
+
+  const {currentNote, setCurrentNote} = useNoteStore();
+  const {closeNoteEdit, openCategoryModal} = useAppStore();
+
+  const tl = gsap.timeline()
+  const {t} = useTranslation();
   const currentDate = new Date();
   const initialValues = {
     title: '',
     text: '',
   }
+
   const [noteToCreate, setNoteToCreate] = useState<NoteToCreate>(initialValues)
+  const componentRef = useRef(null);
+  const backButtonRef = useRef(null);
+  const saveButtonRef = useRef(null);
+
   const updateNote = (key: string, value: string) => {
     setNoteToCreate({...noteToCreate, [key]: value})
   }
@@ -99,6 +38,7 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
     setNoteToCreate(initialValues)
     setCurrentNote(null);
   }
+
   const goBack = async (e: any) => {
     e.preventDefault();
     await saveNote(e);
@@ -123,6 +63,7 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
     setCurrentNote(updatedNote);
     onNoteUpdate();
   };
+
   const deleteNote = async (e: any) => {
     e.preventDefault();
     if (!currentNote) return;
@@ -131,6 +72,7 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
       goBack(e);
     })
   }
+
   const optionsList = [
     {
       label: t('createNote.actions.delete'),
@@ -146,39 +88,6 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
     }
   ]
 
-
-
-  useEffect(() => {
-    if (currentNote) {
-      setNoteToCreate({title: currentNote.title, text: currentNote.text})
-    }
-  }, [currentNote]);
-
-  const componentRef = useRef(null);
-  const backButtonRef = useRef(null);
-  const saveButtonRef = useRef(null);
-  useEffect(() => {
-    tl
-      .to(componentRef.current, {
-      duration: 0.5,
-      autoAlpha: 1,
-      y: 0,
-      ease: 'expo.out',
-    })
-      .to(backButtonRef.current, {
-      duration: 0.5,
-      autoAlpha: 1,
-      scale: 1,
-      ease: 'elastic.out',
-    }, '-=0.3')
-      .to(saveButtonRef.current, {
-      duration: 0.5,
-      autoAlpha: 1,
-      scale: 1,
-      ease: 'elastic.out',
-    }, '-=0.35')
-  }, []);
-
   const unMountComp = (onComplete: () => void) => {
     gsap
       .to(componentRef.current, {
@@ -188,6 +97,35 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
         onComplete
       })
   }
+
+  useEffect(() => {
+    if (currentNote) {
+      setNoteToCreate({title: currentNote.title, text: currentNote.text})
+    }
+  }, [currentNote]);
+
+  useEffect(() => {
+    tl
+      .to(componentRef.current, {
+        duration: 0.5,
+        autoAlpha: 1,
+        y: 0,
+        ease: 'expo.out',
+      })
+      .to(backButtonRef.current, {
+        duration: 0.5,
+        autoAlpha: 1,
+        scale: 1,
+        ease: 'elastic.out',
+      }, '-=0.3')
+      .to(saveButtonRef.current, {
+        duration: 0.5,
+        autoAlpha: 1,
+        scale: 1,
+        ease: 'elastic.out',
+      }, '-=0.35')
+  }, []);
+
   return (
     <CreateEditNoteForm ref={componentRef} onSubmit={saveNote}>
       <div className="create-note-header">
@@ -195,7 +133,7 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
           <div className="back-button" ref={backButtonRef}>
             <IconButton dataTestId="back-button" icon="back" onPress={goBack}/>
           </div>
-          {currentNote && <OptionMenu optionList={optionsList} />}
+          {currentNote && <OptionMenu optionList={optionsList}/>}
         </NoteHeaderActions>
         <div className="create-note-title">
           <InputField type="text"
@@ -214,7 +152,7 @@ export default function CreateEditNote({onNoteUpdate}: { onNoteUpdate: () => voi
       </div>
       <div className="create-note-footer">
         <div ref={saveButtonRef} className="save-button">
-          <IconButton dataTestId="save-button" icon="save" backgroundColor="valid" color="valid-dark" shadowColor="valid-dark" />
+          <IconButton dataTestId="save-button" icon="save" backgroundColor="valid" color="valid-dark" shadowColor="valid-dark"/>
         </div>
       </div>
     </CreateEditNoteForm>

@@ -16,6 +16,9 @@ import ENFlagIcon from './ENFlagIcon.tsx';
 import DEFlagIcon from './DEFlagIcon.tsx';
 import CloseIcon from './CloseIcon.tsx';
 import SunIcon from './SunIcon.tsx';
+import LayoutListIcon from '@assets/svg/icons/LayoutListIcon.tsx';
+import LayoutGridIcon from '@assets/svg/icons/LayoutGridIcon.tsx';
+import CogIcon from '@assets/svg/icons/Cog.tsx';
 
 export type IconName =
   'fr-flag'
@@ -35,6 +38,9 @@ export type IconName =
   | 'check'
   | 'menu'
   | 'close'
+  | 'layout-list'
+  | 'layout-grid'
+  | 'cog'
   | 'drop';
 
 export default function getIcon(name: IconName) {
@@ -75,6 +81,13 @@ export default function getIcon(name: IconName) {
       return CloseIcon();
     case 'sun' :
       return SunIcon();
+    case 'layout-list' :
+      return LayoutListIcon();
+    case 'layout-grid' :
+      return LayoutGridIcon();
+    case 'cog': {
+      return CogIcon();
+    }
     default:
       return <>Icon Placeholder</>
   }

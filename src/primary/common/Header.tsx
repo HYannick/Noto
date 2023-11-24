@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import {useTranslation} from 'react-i18next';
-import IconButton from './IconButton.tsx';
+import IconButton from './buttons/IconButton.tsx';
 import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useUserStore} from '@/primary/stores/user.store.ts';
 import Image from '@/primary/common/Image.tsx';
@@ -56,7 +56,7 @@ export default function Header() {
           <p className="greeting-username">{username}</p>
         </div>
       </div>
-      <IconButton dataTestId="menu-icon" icon="menu" onPress={openSidebar}/>
+      <IconButton variant="borderless" dataTestId="menu-icon" icon="cog" onPress={openSidebar} iconSize="3"/>
     </HeaderContainer>
   )
 }

@@ -3,6 +3,10 @@ import {useEffect, useRef} from 'react';
 import {previewImage, resizeImage} from '@utils/image.utils.ts';
 import {ImageBlob} from '@/domain/ImageBlob.ts';
 
+type ImageUploaderProps = {
+  value: ImageBlob,
+  onImageUploaded: (file: Blob) => void
+}
 
 export const Uploader = styled.div`
   width: 100%;
@@ -24,10 +28,7 @@ export const Uploader = styled.div`
     outline: thin dotted;
   }
 `
-type ImageUploaderProps = {
-  value: ImageBlob,
-  onImageUploaded: (file: Blob) => void
-}
+
 export default function ImageUploader({value, onImageUploaded}: ImageUploaderProps) {
   const  labelRef = useRef(null);
   const saveAvatar = async (e: any) => {

@@ -1,18 +1,19 @@
-import './App.css'
-import {initDB} from './storage.ts';
-import HomeView from './views/HomeView.tsx';
+import '@assets/style/App.css'
+import {initDB} from '../storage.ts';
+import HomeView from '@/primary/views/home/HomeView.tsx';
 import {useEffect} from 'react';
-import {useTheme} from './domain/hooks/UseTheme.ts';
-import {IContainer} from './domain/IContainer.ts';
-import {NoteService} from './primary/note/NoteService.ts';
-import {ContainerProvider} from './primary/common/ContainerProvider.tsx';
-import {NoteResource} from './secondary/note/NoteResource.ts';
+import {useTheme} from '../domain/hooks/UseTheme.ts';
+import {IContainer} from '../domain/IContainer.ts';
+import {NoteService} from './note/NoteService.ts';
+import {ContainerProvider} from './common/ContainerProvider.tsx';
+import {NoteResource} from '../secondary/note/NoteResource.ts';
 import localforage from 'localforage';
 import {changeLanguage} from 'i18next';
-import {UserService} from './primary/user/UserService.ts';
-import {UserResource} from './secondary/user/UserResource.ts';
+import {UserService} from './user/UserService.ts';
+import {UserResource} from '../secondary/user/UserResource.ts';
 import {CategoryService} from '@/primary/category/CategoryService.ts';
 import {CategoryResource} from '@/secondary/category/CategoryResource.ts';
+import {useAppStore} from '@/primary/stores/app.store.ts';
 
 const storage = initDB();
 
@@ -37,6 +38,7 @@ const container: IContainer = {
 
 function App() {
   const {setTheme} = useTheme();
+  const {setLayout} = useAppStore();
   const getLanguage = async () => {
     let currentLang = await localforage.getItem('currentLang') as string;
     if (!currentLang) {
@@ -45,9 +47,20 @@ function App() {
     }
     changeLanguage(currentLang);
   }
+
+  const getLayout = async () => {
+    let currentLayout = await localforage.getItem('currentLayout') as 'grid' | 'list';
+    if (!currentLayout) {
+      currentLayout = 'grid';
+      await localforage.setItem('currentLayout', currentLayout);
+    }
+    setLayout(currentLayout);
+  }
   useEffect(() => {
     setTheme();
     getLanguage();
+    getLayout();
+    // fillStorage();
   }, [])
 
 

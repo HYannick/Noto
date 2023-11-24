@@ -1,4 +1,4 @@
-import IconButton from './IconButton.tsx';
+import IconButton from './buttons/IconButton.tsx';
 import {useState} from 'react';
 import {useClickAway} from '@uidotdev/usehooks';
 import styled from '@emotion/styled';
