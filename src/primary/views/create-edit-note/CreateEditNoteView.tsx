@@ -1,5 +1,5 @@
 import IconButton from '@/primary/common/buttons/IconButton.tsx';
-import {ChangeEvent, FormEvent, useEffect, useRef, useState} from 'react';
+import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import InputField from '@/primary/common/InputField.tsx';
 import {useTranslation} from 'react-i18next';
 import {Note, NoteToCreate} from '@/domain/Note.ts';
@@ -9,13 +9,14 @@ import {useNoteStore} from '@/primary/stores/note.store.ts';
 import OptionMenu from '@/primary/common/OptionMenu.tsx';
 import gsap from 'gsap';
 import {CreateEditNoteForm, NoteHeaderActions} from '@/primary/views/create-edit-note/CreateEditNoteView.styled.tsx';
+import {useHistory} from '@/domain/hooks/useHistory.ts';
 
 
 export default function CreateEditNoteView({onNoteUpdate}: { onNoteUpdate: () => void }) {
   const noteService = useInject('noteService');
 
   const {currentNote, setCurrentNote} = useNoteStore();
-  const {closeNoteEdit, openCategoryModal} = useAppStore();
+  const {closeNoteEdit, openCategoryModal, createEditNoteOpen} = useAppStore();
 
   const tl = gsap.timeline()
   const {t} = useTranslation();
@@ -39,17 +40,16 @@ export default function CreateEditNoteView({onNoteUpdate}: { onNoteUpdate: () =>
     setCurrentNote(null);
   }
 
-  const goBack = async (e: any) => {
-    e.preventDefault();
-    await saveNote(e);
+  const goBack = async () => {
+    await saveNote();
     unMountComp(() => {
       closeNoteEdit();
       resetNote()
     })
   }
 
-  const saveNote = async (e: FormEvent) => {
-    e.preventDefault();
+  const saveNote = async () => {
+
     if (!noteToCreate.text) return;
 
     let updatedNote: Note;
@@ -69,7 +69,7 @@ export default function CreateEditNoteView({onNoteUpdate}: { onNoteUpdate: () =>
     if (!currentNote) return;
     await noteService.deleteNoteById(currentNote.id)
     unMountComp(() => {
-      goBack(e);
+      goBack();
     })
   }
 
@@ -126,6 +126,7 @@ export default function CreateEditNoteView({onNoteUpdate}: { onNoteUpdate: () =>
       }, '-=0.35')
   }, []);
 
+  useHistory('createEditNoteOpen', createEditNoteOpen, goBack);
   return (
     <CreateEditNoteForm ref={componentRef} onSubmit={saveNote}>
       <div className="create-note-header">

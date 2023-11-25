@@ -18,6 +18,7 @@ import {AppUserInfos, OptionItem, Overlay, SideBarContainer} from '@/primary/com
 import {createPortal} from 'react-dom';
 import styled from '@emotion/styled';
 import {useCategoriesStore} from '@/primary/stores/categories.store.ts';
+import {useHistory} from '@/domain/hooks/useHistory.ts';
 
 
 export const Modal = styled.div`
@@ -82,7 +83,7 @@ const ConfirmModal = ({onConfirm, onCancel, message, subMessage}: { onConfirm: (
   )
 }
 export default function SettingsDrawer() {
-  const {closeSidebar, setLayout} = useAppStore()
+  const {closeSidebar, setLayout, sidebarOpen} = useAppStore()
   const {setNotes} = useNoteStore()
   const {setCategories} = useCategoriesStore()
   const userService = useInject('userService');
@@ -213,6 +214,8 @@ export default function SettingsDrawer() {
       </>
     );
   };
+
+  useHistory('sidebarOpen', sidebarOpen, beforeClose);
 
   return (
     <>

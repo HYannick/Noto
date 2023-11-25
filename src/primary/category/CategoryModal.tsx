@@ -10,6 +10,7 @@ import {useAppStore} from '@/primary/stores/app.store.ts';
 import {useNoteStore} from '@/primary/stores/note.store.ts';
 import {useTranslation} from 'react-i18next';
 import {useCategoriesStore} from '@/primary/stores/categories.store.ts';
+import {useHistory} from '@/domain/hooks/useHistory.ts';
 
 export const CategoryModalContainer = styled.div`
   width: 100%;
@@ -72,7 +73,7 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
   const noteService = useInject('noteService')
   const categoryService = useInject('categoryService');
 
-  const {closeCategoryModal}= useAppStore();
+  const {closeCategoryModal, categoryModalOpen}= useAppStore();
   const {currentNote, setCurrentNote} = useNoteStore();
   const {selectedCategory, categories, setCategories} = useCategoriesStore();
 
@@ -162,6 +163,7 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
     return currentNote ? currentNote.categories?.includes(categoryId) : selectedCategory === categoryId
   }
 
+  useHistory('categoryModalOpen', categoryModalOpen, beforeClose);
   return (
     <>
       <CategoryModalContainer ref={containerRef}>

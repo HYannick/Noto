@@ -62,7 +62,6 @@ function App() {
     getLayout();
   }, [])
 
-
   return (
     <ContainerProvider container={container}>
       <HomeView/>

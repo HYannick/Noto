@@ -47,6 +47,9 @@ export default function Header() {
   const {t} = useTranslation();
   const {openSidebar} = useAppStore()
   const {username, avatar} = useUserStore();
+  const viewOptions = () => {
+    openSidebar();
+  }
   return (
     <HeaderContainer>
       <div className="greeting-container">
@@ -56,7 +59,7 @@ export default function Header() {
           <p className="greeting-username">{username}</p>
         </div>
       </div>
-      <IconButton variant="borderless" dataTestId="menu-icon" icon="cog" onPress={openSidebar} iconSize="3"/>
+      <IconButton variant="borderless" dataTestId="menu-icon" icon="cog" onPress={viewOptions} iconSize="3"/>
     </HeaderContainer>
   )
 }
