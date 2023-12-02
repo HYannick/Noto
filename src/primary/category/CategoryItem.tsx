@@ -8,10 +8,11 @@ type CategoryItemProps = {
   onLongPress: (category: Category) => void,
   onPressStart: (category: Category) => void,
   onPressCancel: (category: Category) => void,
+  onPress: (category: Category) => void,
   selected: boolean,
   matchCategories: boolean,
 }
-export default function CategoryItem({category, onLongPress, onPressStart, onPressCancel, selected, matchCategories,}: CategoryItemProps) {
+export default function CategoryItem({category, onLongPress, onPressStart, onPress, onPressCancel, selected, matchCategories,}: CategoryItemProps) {
   const bind = (category: Category) => useLongPress(() => onLongPress(category), {
     onStart: () => onPressStart(category),
     onCancel: () => onPressCancel(category),
@@ -22,9 +23,10 @@ export default function CategoryItem({category, onLongPress, onPressStart, onPre
       {...bind(category)()}
       selected={selected}
       matchCategories={matchCategories}
+      onClick={() => onPress(category)}
       className="category-item">
-      {category.name}
-      {matchCategories && <Icon icon='check' color='primary'/>}
+      <span>{category.name}</span>
+      {matchCategories && <Icon icon='check' color='primary' iconSize='1.8' />}
     </CategoryItemComp>
   )
 }

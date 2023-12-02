@@ -10,6 +10,13 @@ export default {
       favourite: 'Favoriten',
       categories: 'Ordner',
     },
+    notes: {
+      confirm: {
+        message: 'Möchten Sie diese Notiz wirklich löschen?',
+        subMessage: 'Diese Aktion ist nicht rückgängig zu machen.'
+      },
+      selected: '{{count}} Notizen ausgewählt',
+    },
     buttons: {
       create: 'Erstellen',
       save: 'Speichern'
@@ -33,7 +40,7 @@ export default {
       selected_one: '{{count}} Kategorie ausgewählt',
       confirm: {
         message: 'Möchten Sie diese Kategorie wirklich löschen?',
-        subMessage : 'Diese Aktion ist nicht rückgängig zu machen.'
+        subMessage: 'Diese Aktion ist nicht rückgängig zu machen.'
       }
     },
     options: {

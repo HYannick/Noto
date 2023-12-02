@@ -13,6 +13,6 @@ export const StickyHeader = styled.div`
   margin: 0 -1.5rem;
   z-index: 10;
   background: var(--color-light);
-  padding: 0 1.5rem 1.5rem;
+  padding: 1.5rem;
   border-bottom: ${(props: {isPinned: boolean }) => props.isPinned && '0.1rem solid var(--color-dark)'};
 `

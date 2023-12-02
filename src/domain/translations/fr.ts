@@ -10,6 +10,13 @@ export default {
       favourite: 'Favoris',
       categories: 'Dossiers',
     },
+    notes: {
+      confirm: {
+        message: 'Êtes-vous sûr de vouloir supprimer cette note ?',
+        subMessage : 'Cette action est irréversible.'
+      },
+      selected: '{{count}} notes sélectionnées',
+    },
     buttons: {
       create: 'Créer',
       save: 'Sauvegarder'

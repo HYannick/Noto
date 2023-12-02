@@ -7,7 +7,7 @@ export const ActionModalComp = styled.div`
   position: fixed;
   z-index: 2000;
   bottom: 0;
-  background-color: var(--color-grey-light);
+  background-color: var(--color-primary-light);
   width: 100vw;
   padding: 2rem 1.5rem 1.5rem;
   display: flex;
@@ -22,7 +22,7 @@ export const ActionEditOverlay = styled(Overlay)`
   z-index: 90;
   opacity: 0.8;
 `
-export const ActionModal = ({options, children, editMode}: { editMode: boolean, options: { icon: IconName, action: () => void }[] , children: any}) => {
+export const ActionModal = ({options, children, editMode = false}: { editMode?: boolean, options: { icon: IconName, action: () => void }[] , children?: any}) => {
   return (
    <>
      <ActionModalComp>

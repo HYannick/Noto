@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import Header from '@/primary/common/Header.tsx';
 import Search from '@/primary/common/Search.tsx';
 import NoteList from '@/primary/note/NoteList.tsx';
@@ -14,11 +14,58 @@ import SettingsDrawer from '@/primary/common/drawers/SettingsDrawer.tsx';
 import CategoryModal from '@/primary/category/CategoryModal.tsx';
 import CategoryList from '@/primary/category/CategoryList.tsx';
 import {useCategoriesStore} from '@/primary/stores/categories.store.ts';
-import { useIntersectionObserver } from '@uidotdev/usehooks';
+import {useIntersectionObserver} from '@uidotdev/usehooks';
 import {IconAddButton, StickyHeader} from '@/primary/views/home/HomeView.styled.tsx';
+import {SelectionContext, SelectionContextProvider} from '@/primary/views/home/SelectionContextProvider.tsx';
+import styled from '@emotion/styled';
+import {useTranslation} from 'react-i18next';
 
 
+export const SelectHeaderComp = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  position: relative;
+  z-index: -1;
+  > div {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    color: var(--color-dark);
+  }
 
+  p {
+    font-size: 1.6rem;
+    font-weight: bold;
+  }
+`
+
+export const StickyHead = ({filterByCategory}: { filterByCategory: any }) => {
+  const {selectMode, resetSelectMode, selectedNotes} = useContext(SelectionContext);
+  const {t} = useTranslation();
+  const SearchHeader = () => {
+    return (
+      <>
+        <Search/>
+        <CategoryList onCategorySelected={filterByCategory}/>
+      </>
+    )
+  }
+  const SelectHeader = () => {
+    return (
+      <SelectHeaderComp className="select-header">
+        <div>
+          <IconButton variant="borderless" icon="close" onPress={resetSelectMode}/>
+          <p>{t('notes.selected', {count: selectedNotes.length})}</p>
+        </div>
+      </SelectHeaderComp>
+    )
+  }
+
+  return selectMode ? <SelectHeader/> : <SearchHeader/>
+}
 
 export default function HomeView() {
   const noteService = useInject('noteService');
@@ -104,14 +151,16 @@ export default function HomeView() {
     performSearch();
   }, [searchQuery]);
 
+
   return (
     <>
       <Header/>
-      <StickyHeader ref={ref} isPinned={isHeaderPinned}>
-        <Search/>
-        <CategoryList onCategorySelected={filterByCategory}/>
-      </StickyHeader>
-      <NoteList loading={loading} error={error} notes={filteredNotes}/>
+      <SelectionContextProvider>
+        <StickyHeader ref={ref} isPinned={isHeaderPinned}>
+          <StickyHead filterByCategory={filterByCategory}/>
+        </StickyHeader>
+        <NoteList loading={loading} error={error} notes={filteredNotes}  onNoteListUpdate={fetchNotes}/>
+      </SelectionContextProvider>
       <IconAddButton>
         <IconButton icon="add" onPress={openNoteEdit} backgroundColor="primary" color="light" shadowColor="primary-dark"/>
       </IconAddButton>

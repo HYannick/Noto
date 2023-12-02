@@ -10,6 +10,13 @@ export default {
       favourite: 'Favourites',
       categories: 'categories',
     },
+    notes: {
+      confirm: {
+        message: 'Are you sure you want to delete this note?',
+        subMessage : 'This action is irreversible.'
+      },
+      selected: '{{count}} notes selected',
+    },
     buttons: {
       create: 'Create',
       save: 'Save'

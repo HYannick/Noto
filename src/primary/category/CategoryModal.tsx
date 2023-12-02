@@ -23,6 +23,7 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
   onCategoryUpdate: () => void,
   onFilterByCategoryUpdate: (categoryId: string) => void
 }) {
+  const {t} = useTranslation();
   const noteService = useInject('noteService')
   const categoryService = useInject('categoryService');
 
@@ -30,19 +31,18 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
   const {currentNote, setCurrentNote} = useNoteStore();
   const {selectedCategory, categories, setCategories} = useCategoriesStore();
 
-  const overlayRef = useRef(null);
   const containerRef = useRef(null);
 
+  const [formOpen, toggleForm] = useState(false);
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [actionBarOpen, setActionBarOpen] = useState(false);
+  const [confirmModalOpen, toggleConfirmModal] = useState<boolean>(false);
+  const [editCategoryFormOpen, toggleEditCategoryForm] = useState<boolean>(false);
 
   const triggerEnterAnimation = () => {
     const tl = gsap.timeline();
     tl
-      .to(overlayRef.current, {
-        duration: 0.3,
-        autoAlpha: 0.8,
-        ease: 'expo.out',
-      }, '-=0.3')
       .to(containerRef.current, {
         duration: 0.5,
         autoAlpha: 1,
@@ -55,16 +55,12 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
     const fetchedCategories = await categoryService.getAllCategories()
     setCategories(fetchedCategories)
   }
+
   const beforeClose = () => {
     const tl = gsap.timeline({
       onComplete: closeCategoryModal,
     });
     tl
-      .to(overlayRef.current, {
-        duration: 0.3,
-        autoAlpha: 0,
-        ease: 'expo.out',
-      }, '-=0.3')
       .to(containerRef.current, {
         duration: 0.5,
         autoAlpha: 1,
@@ -74,19 +70,12 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
 
   }
 
-  useEffect(() => {
-    triggerEnterAnimation();
-    fetchCategories();
-  }, []);
+  useHistory('categoryModalOpen', categoryModalOpen, beforeClose);
 
-  const [formOpen, toggleForm] = useState(false);
-  const [selectMode, setSelectMode] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
-
-  const {t} = useTranslation();
   const categoryAlreadyExist = (categoryName: string) => {
     return !!categories.find(category => category.name === categoryName)
   }
+
   const saveForm = async (e: any, categoryName: string) => {
     e.preventDefault();
     if (!categoryName) return;
@@ -110,8 +99,7 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
   const handleCategorySelection = async (categoryId: string) => {
     if (!currentNote) {
       onFilterByCategoryUpdate(categoryId);
-      //TODO try to find a new way to close modal
-      // beforeClose();
+      beforeClose();
     } else {
       await bindCategoryToNote(categoryId);
     }
@@ -120,8 +108,6 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
   const categoryItemSelected = (categoryId: string) => {
     return currentNote ? currentNote.categories?.includes(categoryId) : selectedCategory === categoryId
   }
-
-  useHistory('categoryModalOpen', categoryModalOpen, beforeClose);
 
   const matchCategories = (categoryId: string) => selectedCategories.map(category => category.id).includes(categoryId)
 
@@ -148,6 +134,7 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
   }
 
   const selectCategory = (category: Category) => {
+    console.log('???')
     if (selectMode) {
       return;
     }
@@ -155,8 +142,6 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
     handleCategorySelection(category.id)
   }
 
-  const [confirmModalOpen, toggleConfirmModal] = useState<boolean>(false);
-  const [editCategoryFormOpen, toggleEditCategoryForm] = useState<boolean>(false);
   const deleteCategories = async () => {
     await categoryService.deleteCategoriesById(selectedCategories.map(category => category.id));
     onCategoryUpdate();
@@ -167,7 +152,12 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
     e.preventDefault();
     const categoryToUpdate = selectedCategories[0];
     await categoryService.updateCategory(categoryToUpdate.id, {...categoryToUpdate, name: categoryNameToEdit});
+    toggleEditCategoryForm(false);
     onCategoryUpdate();
+  }
+
+  const closeConfirmModal = () => {
+    toggleConfirmModal(false);
   }
 
   const optionsList: ActionOption[] = [
@@ -185,27 +175,32 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
     }] as ActionOption[] : [])
   ];
 
-  const closeConfirmModal = () => {
-    toggleConfirmModal(false);
-  }
-
   const categoryNameToEdit = selectedCategories[0]?.name;
+
+  useEffect(() => {
+    triggerEnterAnimation();
+    fetchCategories();
+  }, []);
+
+  const ModalHeader = () => (
+    <>
+      <IconButton icon="close" onPress={resetSelectMode}/>
+      <p>{t('categories.selected', {count: selectedCategories.length})}</p>
+    </>
+  )
+
+  const EditModeHeader = () => (
+    <>
+      <IconButton icon="back" onPress={beforeClose}/>
+      <p>{t('categories.title')}</p>
+    </>
+  )
 
   return (
     <>
       <CategoryModalContainer ref={containerRef}>
         <div className="categories-header">
-          {actionBarOpen ? (
-            <>
-              <IconButton icon="close" onPress={resetSelectMode}/>
-              <p>{t('categories.selected', {count: selectedCategories.length})}</p>
-            </>
-          ) : (
-            <>
-              <IconButton icon="back" onPress={beforeClose}/>
-              <p>{t('categories.title')}</p>
-            </>
-          )}
+          {actionBarOpen ? <ModalHeader/> : <EditModeHeader/>}
         </div>
         <div className="category-list">
           {categories.map(category => (
@@ -213,27 +208,35 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
               category={category}
               onLongPress={initSelectMode}
               onPressStart={updateSelectedCategories}
-              onPressCancel={selectCategory}
+              onPressCancel={() => console.log('cancel')}
+              onPress={selectCategory}
               selected={!selectMode && categoryItemSelected(category.id)}
               matchCategories={matchCategories(category.id)}
               key={category.id}
             />
           ))}
         </div>
-        {formOpen ? <CategoryForm onSubmit={saveForm} onReset={resetForm}/> :
-          <DefaultButton fullWidth textCentered label={t('categories.add')} onPress={() => toggleForm(true)}/>}
+        {
+          formOpen ?
+            <CategoryForm onSubmit={saveForm} onReset={resetForm}/> :
+            <DefaultButton fullWidth textCentered label={t('categories.add')} onPress={() => toggleForm(true)}/>}
       </CategoryModalContainer>
       {
-        actionBarOpen && (createPortal(
-          <ActionModal options={optionsList} editMode={editCategoryFormOpen}>
-            <CategoryForm categoryNameToEdit={categoryNameToEdit} onSubmit={updateCategory} onReset={() => toggleEditCategoryForm(false)}/>
-          </ActionModal>,
-          document.body))
+        actionBarOpen && (
+          createPortal(
+            <ActionModal options={optionsList} editMode={editCategoryFormOpen}>
+              <CategoryForm categoryNameToEdit={categoryNameToEdit} onSubmit={updateCategory} onReset={() => toggleEditCategoryForm(false)}/>
+            </ActionModal>,
+            document.body)
+        )
       }
       {
-        confirmModalOpen && (createPortal(
-          <ConfirmModal message={t('categories.confirm.message')} onConfirm={deleteCategories} onCancel={closeConfirmModal} subMessage={t('categories.confirm.subMessage')}/>,
-          document.body))
+        confirmModalOpen && (
+          createPortal(
+            <ConfirmModal message={t('categories.confirm.message')} onConfirm={deleteCategories} onCancel={closeConfirmModal}
+                          subMessage={t('categories.confirm.subMessage')}/>,
+            document.body)
+        )
       }
     </>
   )

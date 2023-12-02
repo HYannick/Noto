@@ -7,7 +7,7 @@ export interface INoteService {
   updateNote: (noteId: string, noteToUpdate: Note) => Promise<Note>;
   getNoteById: (noteId: string) => Promise<Note>;
   deleteNoteById: (noteId: string) => Promise<void>;
-
+  deleteNotesById: (noteIds: NoteId[]) => Promise<void>;
   bindCategory(categoryId: string, noteId: NoteId): Promise<Note>;
 }
 
@@ -35,12 +35,17 @@ export const NoteService = (noteResource: NoteResourceRepository): INoteService 
     return await noteResource.bindCategory(categoryId, noteId);
   }
 
+  const deleteNotesById = async (noteIds: NoteId[]): Promise<void> => {
+    await noteResource.deleteNotesById(noteIds);
+  }
+
   return {
     getNoteById,
     getAllNotes,
     createNote,
     updateNote,
     deleteNoteById,
-    bindCategory
+    bindCategory,
+    deleteNotesById
   }
 }

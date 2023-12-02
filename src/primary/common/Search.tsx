@@ -9,8 +9,6 @@ import {useWindowScroll} from '@uidotdev/usehooks';
 export const SearchContainer = styled.form`
   display: flex;
   gap: 1.5rem;
-  margin-top: 3rem;
-
   .input-field {
     flex: 1;
     height: 5rem;

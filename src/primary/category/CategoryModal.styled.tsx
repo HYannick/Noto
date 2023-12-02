@@ -49,15 +49,17 @@ export const CategoryItemComp = styled.div`
   cursor: pointer;
   transition: background .05s ease, transform .05s ease;
   justify-content: space-between;
-
-  ${(props: { selected: boolean, matchCategories: boolean }) => props.selected && `
+  span {
+    user-select: none;
+  }
+  ${(props: { selected: boolean, matchCategories: boolean}) => props.selected && `
     background: var(--color-primary);
     color: var(--color-light);
       box-shadow: inset 0 0 0 0.2rem var(--color-primary-dark);
   `}
   ${(props: { matchCategories: boolean }) => props.matchCategories && `
     background: var(--color-primary-light);
-        transform: scale(.95);
+        transform: scale(.98);
     color: var(--color-primary);
       box-shadow: inset 0 0 0 0.2rem var(--color-primary);
   
