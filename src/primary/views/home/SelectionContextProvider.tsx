@@ -3,12 +3,12 @@ import {Note} from '@/domain/Note.ts';
 
 export const SelectionContext = createContext({
   selectMode: false,
-  setSelectMode: (selectMode: boolean) => {},
+  setSelectMode: (selectMode: boolean) => selectMode,
   selectedNotes: [] as Note[],
-  setSelectedNotes: (notes: Note[]) => {},
+  setSelectedNotes: (notes: Note[]) => notes,
   actionBarOpen: false,
-  setActionBarOpen: (actionBarOpen: boolean) => {},
-  initSelectMode: (note: Note) => {},
+  setActionBarOpen: (actionBarOpen: boolean) => actionBarOpen,
+  initSelectMode: (note: Note) => note,
   resetSelectMode: () => {},
 });
 
