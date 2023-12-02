@@ -29,6 +29,12 @@ export default {
       add: 'Nouvelle catégorie',
       label: 'Nom de la catégorie',
       title: 'Catégories',
+      selected: '{{count}} catégories sélectionnées',
+      selected_one: '{{count}} catégorie sélectionnée',
+      confirm: {
+        message: 'Êtes-vous sûr de vouloir supprimer cette catégorie ?',
+        subMessage : 'Cette action est irréversible.'
+      }
     },
     options: {
       userInfos: {

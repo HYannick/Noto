@@ -29,6 +29,12 @@ export default {
       add: 'Neue Kategorie',
       label: 'Kategoriename',
       title: 'Kategorien',
+      selected: '{{count}} Kategorien ausgewählt',
+      selected_one: '{{count}} Kategorie ausgewählt',
+      confirm: {
+        message: 'Möchten Sie diese Kategorie wirklich löschen?',
+        subMessage : 'Diese Aktion ist nicht rückgängig zu machen.'
+      }
     },
     options: {
       style: {

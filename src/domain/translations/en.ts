@@ -29,6 +29,12 @@ export default {
       add: 'New category',
       label: 'Category name',
       title: 'Categories',
+      selected: '{{count}} categories selected',
+      selected_one: '{{count}} category selected',
+      confirm: {
+        message: 'Are you sure you want to delete this category?',
+        subMessage : 'This action is irreversible.'
+      }
     },
     options: {
       style: {

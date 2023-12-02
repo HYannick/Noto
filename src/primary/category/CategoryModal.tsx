@@ -198,7 +198,7 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
           {actionBarOpen ? (
             <>
               <IconButton icon="close" onPress={resetSelectMode}/>
-              <p>{selectedCategories.length} item selected</p>
+              <p>{t('categories.selected', {count: selectedCategories.length})}</p>
             </>
           ) : (
             <>
@@ -232,7 +232,7 @@ export default function CategoryModal({onCategoryUpdate, onFilterByCategoryUpdat
       }
       {
         confirmModalOpen && (createPortal(
-          <ConfirmModal message={'sûr ? Oui ?'} onConfirm={deleteCategories} onCancel={closeConfirmModal} subMessage='irreversible'/>,
+          <ConfirmModal message={t('categories.confirm.message')} onConfirm={deleteCategories} onCancel={closeConfirmModal} subMessage={t('categories.confirm.subMessage')}/>,
           document.body))
       }
     </>
