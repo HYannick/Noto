@@ -1,16 +1,18 @@
 import {createContext, useCallback, useState} from 'react';
 import {Note} from '@/domain/Note.ts';
 
-export const SelectionContext = createContext({
+const defaultValues = {
   selectMode: false,
-  setSelectMode: (selectMode: boolean) => selectMode,
+  setSelectMode: (_selectMode: boolean) => {},
   selectedNotes: [] as Note[],
-  setSelectedNotes: (notes: Note[]) => notes,
+  setSelectedNotes: (_notes: Note[]) => {},
   actionBarOpen: false,
-  setActionBarOpen: (actionBarOpen: boolean) => actionBarOpen,
-  initSelectMode: (note: Note) => note,
+  setActionBarOpen: (_actionBarOpen: boolean) => {},
+  initSelectMode: (_note: Note) => {},
   resetSelectMode: () => {},
-});
+}
+
+export const SelectionContext = createContext(defaultValues);
 
 export const SelectionContextProvider = ({children}: { children: any }) => {
   const [selectMode, setSelectMode] = useState(false);
