@@ -7,7 +7,7 @@ const categoryResource = mockCategoryResource({
   getAllCategories: vi.fn().mockResolvedValue([mockCategory()]),
   createCategory: vi.fn().mockResolvedValue(mockCategory()),
   getCategoryById: vi.fn().mockResolvedValue(mockCategory({id: 'inokuni'})),
-  deleteCategoryById: vi.fn().mockResolvedValue([mockCategory({id: 'inokuni'})])
+  deleteCategoriesById: vi.fn().mockResolvedValue([mockCategory({id: 'inokuni'})])
 })
 describe('CategoryService', () => {
   it('should get all categories', async () => {
@@ -33,7 +33,7 @@ describe('CategoryService', () => {
 
   it('should remove a Category by id', async () => {
     const categoryService = CategoryService(categoryResource);
-    await categoryService.deleteCategoryById('inokuni');
-    expect(categoryResource.deleteCategoryById).toHaveBeenCalledWith('inokuni');
+    await categoryService.deleteCategoriesById(['inokuni']);
+    expect(categoryResource.deleteCategoriesById).toHaveBeenCalledWith(['inokuni']);
   });
 });
