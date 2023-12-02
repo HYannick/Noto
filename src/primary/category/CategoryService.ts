@@ -6,7 +6,7 @@ export interface ICategoryService {
   createCategory: (categoryToCreate: CategoryToCreate) =>  Promise<Category>;
   updateCategory: (categoryId: string, categoryToUpdate: Category) => Promise<Category>;
   getCategoryById: (categoryId: string) => Promise<Category>;
-  deleteCategoryById: (categoryId: string) => Promise<void>;
+  deleteCategoriesById: (categoryIds: string[]) => Promise<void>;
 }
 
 export const CategoryService = (categoryResource: CategoryResourceRepository): ICategoryService => {
@@ -17,15 +17,15 @@ export const CategoryService = (categoryResource: CategoryResourceRepository): I
     return await categoryResource.createCategory(CategoryToCreate);
   }
 
-  const updateCategory = async (CategoryId: string, CategoryToUpdate: Category) => {
-    return await categoryResource.updateCategory(CategoryId, CategoryToUpdate);
+  const updateCategory = async (CategoryId: string, categoryToUpdate: Category) => {
+    return await categoryResource.updateCategory(CategoryId, categoryToUpdate);
   }
 
   const getCategoryById = async (CategoryId: string): Promise<Category> =>  {
     return await categoryResource.getCategoryById(CategoryId);
   }
-  const deleteCategoryById = async (CategoryId: string): Promise<void> =>  {
-    await categoryResource.deleteCategoryById(CategoryId);
+  const deleteCategoriesById = async (CategoryIds: string[]): Promise<void> =>  {
+    await categoryResource.deleteCategoriesById(CategoryIds);
   }
 
   return {
@@ -33,6 +33,6 @@ export const CategoryService = (categoryResource: CategoryResourceRepository): I
     getAllCategories,
     createCategory,
     updateCategory,
-    deleteCategoryById
+    deleteCategoriesById
   }
 }

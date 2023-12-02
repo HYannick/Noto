@@ -19,7 +19,7 @@ const storage = initDB();
 
 const noteResource = NoteResource(storage);
 const userResource = UserResource(storage);
-const categoryResource = CategoryResource(storage);
+const categoryResource = CategoryResource(storage, noteResource);
 
 
 const container: IContainer = {

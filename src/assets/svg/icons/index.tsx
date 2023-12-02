@@ -19,6 +19,7 @@ import SunIcon from './SunIcon.tsx';
 import LayoutListIcon from '@assets/svg/icons/LayoutListIcon.tsx';
 import LayoutGridIcon from '@assets/svg/icons/LayoutGridIcon.tsx';
 import CogIcon from '@assets/svg/icons/Cog.tsx';
+import EditIcon from '@assets/svg/icons/EditIcon.tsx';
 
 export type IconName =
   'fr-flag'
@@ -41,6 +42,7 @@ export type IconName =
   | 'layout-list'
   | 'layout-grid'
   | 'cog'
+  | 'edit'
   | 'drop';
 
 export default function getIcon(name: IconName) {
@@ -85,9 +87,10 @@ export default function getIcon(name: IconName) {
       return LayoutListIcon();
     case 'layout-grid' :
       return LayoutGridIcon();
-    case 'cog': {
+    case 'cog':
       return CogIcon();
-    }
+    case 'edit' :
+      return EditIcon();
     default:
       return <>Icon Placeholder</>
   }

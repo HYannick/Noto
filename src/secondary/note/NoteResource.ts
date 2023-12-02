@@ -7,7 +7,9 @@ export interface NoteResourceRepository {
   updateNote: (noteId: NoteId, noteToUpdate: Note) => Promise<Note>;
   getNoteById: (noteId: NoteId) => Promise<Note>;
   deleteNoteById: (noteId: NoteId) => Promise<Note[]>;
+  deleteNotesById: (noteIds: NoteId[]) => Promise<Note[]>;
   bindCategory: (categoryId: string, noteId: NoteId) => Promise<Note>;
+  unbindCategoriesFromNotes: (categoryIds: string[]) => Promise<Note[]>;
 }
 
 const toNote = (noteToCreate: NoteToCreate) => ({
@@ -68,6 +70,25 @@ export const NoteResource = (storage: LocalForage): NoteResourceRepository => {
     return await updateNote(noteId, {...note, categories})
   }
 
+  const unbindCategoriesFromNotes = async (categoryIds: string[]): Promise<Note[]> =>{
+    const notes = await getAllNotes();
+    const categoryIdSet = new Set(categoryIds);
+
+    const updatedNotes = notes.map(note => {
+      const updatedCategories = note.categories.filter(category => !categoryIdSet.has(category));
+      return { ...note, categories: updatedCategories };
+    });
+    await storage.setItem('notes', updatedNotes);
+    return updatedNotes;
+  }
+
+  const deleteNotesById = async (noteIds: string[]): Promise<Note[]> => {
+    const notes = await getAllNotes();
+    const noteIdSet = new Set(noteIds);
+    const filteredNotes = notes.filter(note => !noteIdSet.has(note.id));
+    await storage.setItem('notes', filteredNotes);
+    return filteredNotes;
+  }
 
   return {
     getAllNotes,
@@ -75,6 +96,8 @@ export const NoteResource = (storage: LocalForage): NoteResourceRepository => {
     updateNote,
     getNoteById,
     deleteNoteById,
-    bindCategory
+    bindCategory,
+    unbindCategoriesFromNotes,
+    deleteNotesById
   }
 }

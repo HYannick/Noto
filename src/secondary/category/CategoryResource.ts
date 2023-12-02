@@ -1,12 +1,13 @@
 import {v4 as uuidv4} from 'uuid';
 import {Category, CategoryToCreate} from '@/domain/Category.ts';
+import {NoteResourceRepository} from '@/secondary/note/NoteResource.ts';
 
 export interface CategoryResourceRepository {
   getAllCategories: () => Promise<Category[]>;
   createCategory: (CategoryToCreate: CategoryToCreate) => Promise<Category>;
-  updateCategory: (CategoryId: string, CategoryToUpdate: Category) => Promise<Category>;
-  getCategoryById: (CategoryId: string) => Promise<Category>;
-  deleteCategoryById: (CategoryId: string) => Promise<Category[]>;
+  updateCategory: (categoryId: string, CategoryToUpdate: Category) => Promise<Category>;
+  getCategoryById: (categoryId: string) => Promise<Category>;
+  deleteCategoriesById: (categoryIds: string[]) => Promise<Category[]>;
 }
 
 const toCategory = (CategoryToCreate: CategoryToCreate): Category => ({
@@ -15,7 +16,7 @@ const toCategory = (CategoryToCreate: CategoryToCreate): Category => ({
   notes: CategoryToCreate.notes,
 })
 
-export const CategoryResource = (storage: LocalForage): CategoryResourceRepository => {
+export const CategoryResource = (storage: LocalForage, noteResource: NoteResourceRepository): CategoryResourceRepository => {
   const getAllCategories = async (): Promise<Category[]> => {
     try {
       const categories = await storage.getItem('categories') as Category[];
@@ -33,25 +34,27 @@ export const CategoryResource = (storage: LocalForage): CategoryResourceReposito
     return newCategory;
   }
 
-  const updateCategory = async (CategoryId: string, CategoryToUpdate: Category): Promise<Category> => {
+  const updateCategory = async (categoryId: string, CategoryToUpdate: Category): Promise<Category> => {
     const categories = await getAllCategories();
-    const CategoryToUpdateIndex = categories.findIndex(Category => Category.id === CategoryId);
+    const CategoryToUpdateIndex = categories.findIndex(Category => Category.id === categoryId);
     categories[CategoryToUpdateIndex] = CategoryToUpdate;
     await storage.setItem('categories', categories);
     return CategoryToUpdate;
   }
 
-  const getCategoryById = async (CategoryId: string): Promise<Category> => {
+  const getCategoryById = async (categoryId: string): Promise<Category> => {
     const categories = await getAllCategories();
-    return categories.find(Category => Category.id === CategoryId)!;
+    return categories.find(Category => Category.id === categoryId)!;
   }
 
-  const deleteCategoryById = async (CategoryId: string): Promise<Category[]> => {
+  const deleteCategoriesById = async (categoryIds: string[]): Promise<Category[]> => {
     const categories = await getAllCategories();
-    const updatedNotes = categories.filter(Category => Category.id !== CategoryId);
-    await storage.setItem('categories', updatedNotes);
-    return updatedNotes;
-  }
+    const categoryIdSet = new Set(categoryIds);
+    const filteredCategories = categories.filter(category => !categoryIdSet.has(category.id));
+    await storage.setItem('categories', filteredCategories);
+    await noteResource.unbindCategoriesFromNotes(categoryIds);
+    return filteredCategories;
+  };
 
 
   return {
@@ -59,6 +62,6 @@ export const CategoryResource = (storage: LocalForage): CategoryResourceReposito
     createCategory,
     updateCategory,
     getCategoryById,
-    deleteCategoryById,
+    deleteCategoriesById,
   }
 }

@@ -93,7 +93,7 @@ describe('NoteResource', () => {
 
     const note = await resource.bindCategory('dreams', 'aesthetic-note');
     expect(mockedDB.getItem).toHaveBeenCalledWith('notes');
-    expect(mockedDB.setItem).toHaveBeenCalledWith('notes',  [
+    expect(mockedDB.setItem).toHaveBeenCalledWith('notes', [
       mockNote(),
       mockNote({id: 'aesthetic-note', title: 'Genre is the new Aesthetic', categories: ['dreams']})
     ])
@@ -107,10 +107,66 @@ describe('NoteResource', () => {
     await resource.bindCategory('memories', 'aesthetic-note');
     const note = await resource.bindCategory('dreams', 'aesthetic-note');
     expect(mockedDB.getItem).toHaveBeenCalledWith('notes');
-    expect(mockedDB.setItem).toHaveBeenCalledWith('notes',  [
+    expect(mockedDB.setItem).toHaveBeenCalledWith('notes', [
       mockNote(),
       mockNote({id: 'aesthetic-note', title: 'Genre is the new Aesthetic', categories: ['memories']})
     ])
     expect(note.categories).toEqual(['memories'])
+  });
+
+  it('should unbind categories set from notes', async () => {
+    mockedDB = {
+      getItem: vi.fn().mockResolvedValue([
+        mockNote({
+          id: '1',
+          categories: ['aesthetic-Category', 'origami']
+        }),
+        mockNote({
+          id: '1',
+          categories: ['tokyo-Category', 'aesthetic-Category', 'random-cat']
+        })
+      ]),
+      setItem: vi.fn().mockResolvedValue('OK')
+    }
+    const resource = NoteResource(mockedDB);
+
+    await resource.unbindCategoriesFromNotes(['tokyo-Category', 'random-cat', 'origami']);
+    expect(mockedDB.getItem).toHaveBeenCalledWith('notes');
+    expect(mockedDB.setItem).toHaveBeenCalledWith('notes', [
+      mockNote({
+        id: '1',
+        categories: ['aesthetic-Category']
+      }),
+      mockNote({
+        id: '1',
+        categories: ['aesthetic-Category']
+      })
+    ])
+  });
+
+  it('should delete notes by id', async () => {
+    mockedDB = {
+      getItem: vi.fn().mockResolvedValue([
+        mockNote({
+          id: '1',
+        }),
+        mockNote({
+          id: '2'
+        }),
+        mockNote({
+          id: '3',
+        })
+      ]),
+      setItem: vi.fn().mockResolvedValue('OK')
+    }
+    const resource = NoteResource(mockedDB);
+
+    await resource.deleteNotesById(['1', '3']);
+    expect(mockedDB.getItem).toHaveBeenCalledWith('notes');
+    expect(mockedDB.setItem).toHaveBeenCalledWith('notes', [
+      mockNote({
+        id: '2',
+      })
+    ])
   });
 });

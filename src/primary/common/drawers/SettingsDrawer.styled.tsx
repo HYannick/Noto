@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const SideBarContainer = styled.div`
   position: fixed;
-  z-index: 20;
+  z-index: 100;
   right: 0;
   bottom: 0;
   top: 0;
@@ -109,7 +109,7 @@ export const OptionItem = styled.div`
 
 export const Overlay = styled.div`
   position: fixed;
-  z-index: 10;
+  z-index: 50;
   background: var(--color-light);
   top: 0;
   left: 0;

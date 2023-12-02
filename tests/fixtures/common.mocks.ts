@@ -62,6 +62,7 @@ export const mockCategoryService = (opts?: Partial<ICategoryService>) => ({
   getCategoryById: vi.fn(),
   deleteCategoryById: vi.fn(),
   updateCategory: vi.fn(),
+  deleteCategoriesById: vi.fn(),
   ...opts,
 }) as CategoryResourceRepository;
 
@@ -77,6 +78,7 @@ export const mockNoteResource = (opts?: Partial<NoteResourceRepository>) => ({
   deleteNoteById: vi.fn(),
   updateNote: vi.fn(),
   bindCategory: vi.fn(),
+  unbindCategoriesFromNotes: vi.fn(),
   ...opts,
 }) as NoteResourceRepository;
 
